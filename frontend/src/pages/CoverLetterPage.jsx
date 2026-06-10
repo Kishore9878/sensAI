@@ -92,7 +92,7 @@ const CoverLetterPage = () => {
       setJobDescription('');
     } catch (err) {
       console.error(err);
-      setError('Failed to generate cover letter.');
+      setError(err.response?.data?.message || 'Failed to generate cover letter.');
     } finally {
       setActionLoading(false);
     }
@@ -468,7 +468,7 @@ const CoverLetterPage = () => {
       <footer className="border-t border-neutral-900 py-12 bg-black relative z-10 text-center">
         <div className="container mx-auto px-6">
           <div className="text-xs text-neutral-500 font-medium">
-            Made with 💖 by RoadsideCoder
+            &copy; {new Date().getFullYear()} SensAI. All rights reserved.
           </div>
         </div>
       </footer>

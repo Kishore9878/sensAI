@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { 
@@ -18,6 +18,20 @@ import {
 const LandingPage = () => {
   const { user } = useAuth();
   
+  // Scroll position for 3D image tilt
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const rotateXVal = 15 - Math.min(scrollY / 550, 1) * 20; // 15deg down to -5deg
+  const scaleVal = 0.96 + Math.min(scrollY / 550, 1) * 0.06; // 0.96 to 1.02
+
   // Dropdown states
   const [toolsDropdownOpen, setToolsDropdownOpen] = useState(false);
   
@@ -151,8 +165,8 @@ const LandingPage = () => {
 
       {/* Hero Section */}
       <section className="relative flex flex-col items-center justify-center text-center px-6 pt-20 pb-12 overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/10 via-black to-black">
+        {/* Text and Actions */}
         <div className="max-w-4xl mx-auto space-y-6 relative z-10">
-          
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-[1.15] max-w-3xl mx-auto select-none">
             Your AI Career Coach for <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-neutral-500">
@@ -178,18 +192,24 @@ const LandingPage = () => {
               Watch Demo
             </Link>
           </div>
+        </div>
 
-          {/* Banner Dashboard Image */}
-          <div className="pt-12 max-w-5xl mx-auto">
-            <div className="rounded-xl border border-neutral-800/80 bg-neutral-950/20 p-2 overflow-hidden shadow-2xl shadow-blue-500/5 backdrop-blur">
-              <img 
-                src="/hero_banner.png" 
-                alt="SensAI Dashboard Preview" 
-                className="w-full h-auto rounded-lg"
-              />
-            </div>
+        {/* Banner Dashboard Image with 3D Scroll-driven Perspective Tilt - Expanded Width */}
+        <div className="pt-12 w-full max-w-6xl mx-auto relative z-10" style={{ perspective: '1200px' }}>
+          <div 
+            style={{
+              transform: `rotateX(${rotateXVal}deg) scale(${scaleVal})`,
+              transformStyle: 'preserve-3d',
+              transition: 'transform 0.15s cubic-bezier(0.25, 0.8, 0.25, 1)'
+            }}
+            className="rounded-xl border border-neutral-800/80 bg-neutral-950/20 p-2 overflow-hidden shadow-2xl shadow-blue-500/5 backdrop-blur-md"
+          >
+            <img 
+              src="/hero_banner.png" 
+              alt="SensAI Dashboard Preview" 
+              className="w-full h-auto rounded-lg"
+            />
           </div>
-
         </div>
       </section>
 
@@ -217,10 +237,10 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Card 2: Interview Prep (Highlighted) */}
-            <div className="p-6 rounded-xl border border-white bg-neutral-950/30 flex flex-col justify-between transition-all duration-300 shadow-lg shadow-white/5">
+            {/* Card 2: Interview Prep */}
+            <div className="p-6 rounded-xl border border-neutral-900 bg-neutral-950/30 flex flex-col justify-between hover:border-neutral-800 transition-all duration-300">
               <div className="space-y-4">
-                <div className="text-white">
+                <div className="text-neutral-400">
                   <Briefcase className="w-7 h-7" />
                 </div>
                 <h3 className="font-bold text-white text-base">Interview Preparation</h3>
@@ -260,8 +280,10 @@ const LandingPage = () => {
       </section>
 
       {/* Stats Bar Section */}
-      <section className="border-t border-b border-neutral-900/60 bg-neutral-950/10 py-16 relative z-10">
-        <div className="container mx-auto px-6 max-w-5xl">
+      <section className="border-t border-b border-neutral-800 bg-[#09090b]/80 py-16 relative z-10 overflow-hidden">
+        {/* Stats Grid Pattern Overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1c1c24_1px,transparent_1px),linear-gradient(to_bottom,#1c1c24_1px,transparent_1px)] bg-[size:2rem_2rem] pointer-events-none opacity-40"></div>
+        <div className="container mx-auto px-6 max-w-5xl relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="space-y-1.5">
               <div className="text-3xl sm:text-4xl font-black text-white">50+</div>
@@ -350,8 +372,10 @@ const LandingPage = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-24 bg-black relative z-10 border-b border-neutral-900/60">
-        <div className="container mx-auto px-6">
+      <section className="py-24 bg-[#09090b]/80 relative z-10 border-t border-b border-neutral-800 overflow-hidden">
+        {/* Testimonials Grid Pattern Overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1c1c24_1px,transparent_1px),linear-gradient(to_bottom,#1c1c24_1px,transparent_1px)] bg-[size:2rem_2rem] pointer-events-none opacity-40"></div>
+        <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">What Our Users Say</h2>
           </div>
@@ -444,7 +468,7 @@ const LandingPage = () => {
 
       {/* CTA Section (Ready to Accelerate Your Career) */}
       <section className="py-20 bg-black relative z-10 px-6">
-        <div className="max-w-5xl mx-auto rounded-3xl bg-gradient-to-r from-neutral-400 via-neutral-100 to-neutral-400 text-black py-16 px-8 text-center shadow-2xl relative overflow-hidden">
+        <div className="max-w-6xl mx-auto rounded-3xl bg-gradient-to-r from-neutral-400 via-neutral-100 to-neutral-400 text-black py-16 px-8 text-center shadow-2xl relative overflow-hidden">
           <div className="relative z-10 space-y-6">
             <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-neutral-900">
               Ready to Accelerate Your Career?
@@ -469,7 +493,7 @@ const LandingPage = () => {
       <footer className="border-t border-neutral-900 py-12 bg-black relative z-10 text-center">
         <div className="container mx-auto px-6 space-y-4">
           <div className="text-xs text-neutral-500 font-medium">
-            Made with 💖 by RoadsideCoder
+            &copy; {new Date().getFullYear()} SensAI. All rights reserved.
           </div>
         </div>
       </footer>

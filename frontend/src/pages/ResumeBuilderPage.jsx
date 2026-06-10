@@ -4,12 +4,12 @@ import { useAuth } from '../hooks/useAuth';
 import axiosInstance from '../utils/axiosInstance';
 import MDEditor from '@uiw/react-md-editor';
 import "@uiw/react-md-editor/markdown-editor.css";
-import { 
-  Sparkles, 
-  LayoutGrid, 
-  ChevronDown, 
-  Save, 
-  Download, 
+import {
+  Sparkles,
+  LayoutGrid,
+  ChevronDown,
+  Save,
+  Download,
   Calendar,
   FileText,
   AlertTriangle,
@@ -35,7 +35,7 @@ const ResumeBuilderPage = () => {
   // Tab switcher mode: 'form' or 'markdown'
   const [tabMode, setTabMode] = useState('form');
   const [isEditingMarkdown, setIsEditingMarkdown] = useState(false);
-  
+
   // Loading and error states
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
@@ -109,7 +109,7 @@ const ResumeBuilderPage = () => {
     } catch (e) {
       console.error("Failed to parse hidden resume metadata:", e);
     }
-    
+
     // Fallback if metadata comment not found (e.g. freshly generated AI resume)
     if (profileData) {
       setContactInfo({
@@ -120,7 +120,7 @@ const ResumeBuilderPage = () => {
       });
       setSummary(profileData.bio || '');
       setSkills(profileData.skills?.join(', ') || '');
-      
+
       if (profileData.education && profileData.education.length > 0) {
         setEducations(profileData.education.map(edu => ({
           degree: edu.degree || '',
@@ -144,30 +144,30 @@ const ResumeBuilderPage = () => {
   // Construct Markdown representation with centered headings and emojis
   const generateMarkdownFromForm = (info, summ, sks, exps, edus, projs) => {
     let md = `<h1 align="center">${user?.name || 'Resume'}</h1>\n`;
-    
+
     // Contact Info line
     const contactParts = [];
     if (info.email) contactParts.push(`📧 ${info.email}`);
     if (info.mobile) contactParts.push(`📱 ${info.mobile}`);
     if (info.linkedin) contactParts.push(`💼 [LinkedIn](${info.linkedin})`);
     if (info.twitter) contactParts.push(`🐦 [Twitter](${info.twitter})`);
-    
+
     if (contactParts.length > 0) {
       md += `<p align="center">${contactParts.join(' | ')}</p>\n\n`;
     }
-    
+
     md += `<hr />\n\n`;
-    
+
     // Summary
     if (summ) {
       md += `## Professional Summary\n\n${summ}\n\n`;
     }
-    
+
     // Skills
     if (sks) {
       md += `## Skills\n\n${sks}\n\n`;
     }
-    
+
     // Experience
     if (exps.length > 0) {
       md += `## Work Experience\n\n`;
@@ -177,7 +177,7 @@ const ResumeBuilderPage = () => {
         md += `${exp.description}\n\n`;
       });
     }
-    
+
     // Education
     if (edus.length > 0) {
       md += `## Education\n\n`;
@@ -187,7 +187,7 @@ const ResumeBuilderPage = () => {
         md += `${edu.description}\n\n`;
       });
     }
-    
+
     // Projects
     if (projs.length > 0) {
       md += `## Projects\n\n`;
@@ -206,7 +206,7 @@ const ResumeBuilderPage = () => {
       educations: edus,
       projects: projs
     };
-    
+
     md += `\n<!-- sensai-resume-data: ${JSON.stringify(metadata)} -->`;
     return md;
   };
@@ -216,7 +216,7 @@ const ResumeBuilderPage = () => {
     try {
       setLoading(true);
       setError('');
-      
+
       let profileData = null;
       try {
         const profileRes = await axiosInstance.get('/profile');
@@ -453,7 +453,7 @@ const ResumeBuilderPage = () => {
       {/* Top Header Navbar */}
       <header className="sticky top-0 z-50 w-full border-b border-neutral-800/80 bg-black/80 backdrop-blur">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          
+
           {/* Logo SENSAi */}
           <Link to="/" className="font-sans tracking-tight text-white select-none text-xl font-extrabold">
             SENS<span>A</span><span className="text-blue-500 lowercase">i</span>
@@ -461,7 +461,7 @@ const ResumeBuilderPage = () => {
 
           {/* Right Header Controls */}
           <div className="flex items-center gap-4">
-            <Link 
+            <Link
               to="/dashboard"
               className="bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all duration-200"
             >
@@ -470,7 +470,7 @@ const ResumeBuilderPage = () => {
             </Link>
 
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setToolsDropdownOpen(!toolsDropdownOpen)}
                 className="bg-white hover:bg-neutral-100 text-black px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all duration-200"
               >
@@ -478,27 +478,27 @@ const ResumeBuilderPage = () => {
                 <span>Growth Tools</span>
                 <ChevronDown className="w-3 h-3 text-neutral-500" />
               </button>
-              
+
               {toolsDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-neutral-950 border border-neutral-800 rounded-lg shadow-xl py-1 z-50">
-                  <Link 
-                    to="/resume" 
+                  <Link
+                    to="/resume"
                     onClick={() => setToolsDropdownOpen(false)}
                     className="block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all flex items-center gap-2"
                   >
                     <FileText className="w-3.5 h-3.5" />
                     Build Resume
                   </Link>
-                  <Link 
-                    to="/cover-letter" 
+                  <Link
+                    to="/cover-letter"
                     onClick={() => setToolsDropdownOpen(false)}
                     className="block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all flex items-center gap-2"
                   >
                     <FileText className="w-3.5 h-3.5" />
                     Cover Letter
                   </Link>
-                  <Link 
-                    to="/interview" 
+                  <Link
+                    to="/interview"
                     onClick={() => setToolsDropdownOpen(false)}
                     className="block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all flex items-center gap-2"
                   >
@@ -510,11 +510,11 @@ const ResumeBuilderPage = () => {
             </div>
 
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                 className="w-8 h-8 rounded-full border border-neutral-700 bg-neutral-800 flex items-center justify-center overflow-hidden hover:border-neutral-500 transition-all duration-200"
               >
-                <img 
+                <img
                   src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100&q=80"
                   alt="Profile"
                   className="w-full h-full object-cover"
@@ -529,15 +529,15 @@ const ResumeBuilderPage = () => {
                       <p className="text-[10px] text-neutral-500 truncate">{user.email}</p>
                     </div>
                   )}
-                  <Link 
-                    to="/complete-profile" 
+                  <Link
+                    to="/complete-profile"
                     onClick={() => setProfileDropdownOpen(false)}
                     className="block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all flex items-center gap-2"
                   >
                     <User className="w-3.5 h-3.5 animate-pulse text-indigo-400" />
                     Complete Profile
                   </Link>
-                  <button 
+                  <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-xs text-red-450 hover:bg-neutral-900 hover:text-red-300 transition-all flex items-center gap-2"
                   >
@@ -554,22 +554,22 @@ const ResumeBuilderPage = () => {
 
       {/* Main Container */}
       <main className="flex-1 container mx-auto px-6 py-10 relative z-10 space-y-6 max-w-5xl">
-        
+
         {/* Page Title & Save/Download Actions */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-850 pb-5">
           <div>
             <h1 className="text-4xl font-extrabold text-white tracking-tight">Resume Builder</h1>
           </div>
           <div className="flex items-center gap-3">
-            <button 
-              onClick={handleSave} 
+            <button
+              onClick={handleSave}
               disabled={actionLoading}
               className="inline-flex items-center gap-1.5 bg-[#991b1b] hover:bg-red-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition-all"
             >
               <Save className="w-4 h-4" />
               <span>Save</span>
             </button>
-            <button 
+            <button
               onClick={handleDownloadPDF}
               className="inline-flex items-center gap-1.5 bg-white hover:bg-neutral-100 text-black px-4 py-2 rounded-lg text-xs font-bold transition-all"
             >
@@ -584,21 +584,19 @@ const ResumeBuilderPage = () => {
           <div className="bg-neutral-900 border border-neutral-850 rounded-lg p-1 flex gap-1">
             <button
               onClick={() => setTabMode('form')}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
-                tabMode === 'form'
+              className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${tabMode === 'form'
                   ? 'bg-neutral-800 text-white shadow'
                   : 'text-neutral-400 hover:text-white'
-              }`}
+                }`}
             >
               Form
             </button>
             <button
               onClick={() => setTabMode('markdown')}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
-                tabMode === 'markdown'
+              className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${tabMode === 'markdown'
                   ? 'bg-neutral-800 text-white shadow'
                   : 'text-neutral-400 hover:text-white'
-              }`}
+                }`}
             >
               Markdown
             </button>
@@ -632,14 +630,14 @@ const ResumeBuilderPage = () => {
         {tabMode === 'form' ? (
           /* FORM BUILDER MODE */
           <div className="space-y-6">
-            
+
             {/* Contact Information */}
             <div className="p-6 rounded-xl border border-neutral-900 bg-[#09090b] space-y-4">
               <h3 className="font-bold text-white text-sm">Contact Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1.5">Email</label>
-                  <input 
+                  <input
                     type="email"
                     value={contactInfo.email}
                     onChange={e => setContactInfo({ ...contactInfo, email: e.target.value })}
@@ -649,7 +647,7 @@ const ResumeBuilderPage = () => {
                 </div>
                 <div>
                   <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1.5">Mobile Number</label>
-                  <input 
+                  <input
                     type="text"
                     value={contactInfo.mobile}
                     onChange={e => setContactInfo({ ...contactInfo, mobile: e.target.value })}
@@ -659,7 +657,7 @@ const ResumeBuilderPage = () => {
                 </div>
                 <div>
                   <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1.5">LinkedIn URL</label>
-                  <input 
+                  <input
                     type="text"
                     value={contactInfo.linkedin}
                     onChange={e => setContactInfo({ ...contactInfo, linkedin: e.target.value })}
@@ -669,7 +667,7 @@ const ResumeBuilderPage = () => {
                 </div>
                 <div>
                   <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1.5">Twitter/X Profile</label>
-                  <input 
+                  <input
                     type="text"
                     value={contactInfo.twitter}
                     onChange={e => setContactInfo({ ...contactInfo, twitter: e.target.value })}
@@ -683,7 +681,7 @@ const ResumeBuilderPage = () => {
             {/* Professional Summary */}
             <div className="p-6 rounded-xl border border-neutral-900 bg-[#09090b] space-y-4">
               <h3 className="font-bold text-white text-sm">Professional Summary</h3>
-              <textarea 
+              <textarea
                 value={summary}
                 onChange={e => setSummary(e.target.value)}
                 placeholder="Write a compelling professional summary..."
@@ -694,7 +692,7 @@ const ResumeBuilderPage = () => {
             {/* Skills */}
             <div className="p-6 rounded-xl border border-neutral-900 bg-[#09090b] space-y-4">
               <h3 className="font-bold text-white text-sm">Skills</h3>
-              <textarea 
+              <textarea
                 value={skills}
                 onChange={e => setSkills(e.target.value)}
                 placeholder="List your key skills..."
@@ -705,7 +703,7 @@ const ResumeBuilderPage = () => {
             {/* Work Experience */}
             <div className="p-6 rounded-xl border border-neutral-900 bg-[#09090b] space-y-4">
               <h3 className="font-bold text-white text-sm">Work Experience</h3>
-              
+
               {/* Existing list */}
               <div className="space-y-3">
                 {experiences.map((exp, idx) => (
@@ -715,7 +713,7 @@ const ResumeBuilderPage = () => {
                       <div className="text-[10px] text-neutral-400 font-semibold">{exp.company} • {exp.startDate} - {exp.current ? 'Present' : exp.endDate}</div>
                       <div className="text-[11px] text-neutral-500 leading-relaxed max-w-2xl whitespace-pre-wrap">{exp.description}</div>
                     </div>
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setExperiences(experiences.filter((_, i) => i !== idx))}
                       className="text-neutral-500 hover:text-red-500 transition-colors p-1"
@@ -733,49 +731,49 @@ const ResumeBuilderPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Title/Position</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         value={expForm.title}
                         onChange={e => setExpForm({ ...expForm, title: e.target.value })}
                         placeholder="Title/Position"
-                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none" 
+                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none"
                       />
                     </div>
                     <div>
                       <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Organization/Company</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         value={expForm.company}
                         onChange={e => setExpForm({ ...expForm, company: e.target.value })}
                         placeholder="Organization/Company"
-                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none" 
+                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none"
                       />
                     </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Start Date</label>
-                      <input 
-                        type="month" 
+                      <input
+                        type="month"
                         value={expForm.startDate}
                         onChange={e => setExpForm({ ...expForm, startDate: e.target.value })}
-                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none" 
+                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none"
                       />
                     </div>
                     <div>
                       <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">End Date</label>
-                      <input 
-                        type="month" 
+                      <input
+                        type="month"
                         value={expForm.endDate}
                         onChange={e => setExpForm({ ...expForm, endDate: e.target.value })}
                         disabled={expForm.current}
-                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none disabled:opacity-30" 
+                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none disabled:opacity-30"
                       />
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       id="current-exp"
                       checked={expForm.current}
                       onChange={e => setExpForm({ ...expForm, current: e.target.checked, endDate: e.target.checked ? '' : expForm.endDate })}
@@ -784,15 +782,15 @@ const ResumeBuilderPage = () => {
                     <label htmlFor="current-exp" className="text-xs text-neutral-400 font-medium select-none cursor-pointer">Current Experience</label>
                   </div>
                   <div>
-                    <textarea 
+                    <textarea
                       value={expForm.description}
                       onChange={e => setExpForm({ ...expForm, description: e.target.value })}
                       placeholder="Optimized and refactored..."
-                      className="w-full h-32 bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none resize-none" 
+                      className="w-full h-32 bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none resize-none"
                     />
                   </div>
                   <div className="flex items-center justify-between pt-2">
-                    <button 
+                    <button
                       type="button"
                       onClick={() => handleImproveWithAI('experience')}
                       disabled={actionLoading}
@@ -802,7 +800,7 @@ const ResumeBuilderPage = () => {
                       <span>Improve with AI</span>
                     </button>
                     <div className="flex items-center gap-2">
-                      <button 
+                      <button
                         type="button"
                         onClick={() => {
                           setShowAddExperience(false);
@@ -812,7 +810,7 @@ const ResumeBuilderPage = () => {
                       >
                         Cancel
                       </button>
-                      <button 
+                      <button
                         type="button"
                         onClick={() => {
                           if (expForm.title && expForm.company) {
@@ -829,8 +827,8 @@ const ResumeBuilderPage = () => {
                   </div>
                 </div>
               ) : (
-                <button 
-                  onClick={() => setShowAddExperience(true)} 
+                <button
+                  onClick={() => setShowAddExperience(true)}
                   className="w-full py-3 bg-[#09090b] hover:bg-neutral-900 border border-neutral-800 rounded-lg text-xs font-semibold text-neutral-300 flex items-center justify-center gap-1.5 transition-all"
                 >
                   <PlusCircle className="w-4 h-4" />
@@ -842,7 +840,7 @@ const ResumeBuilderPage = () => {
             {/* Education */}
             <div className="p-6 rounded-xl border border-neutral-900 bg-[#09090b] space-y-4">
               <h3 className="font-bold text-white text-sm">Education</h3>
-              
+
               {/* Existing list */}
               <div className="space-y-3">
                 {educations.map((edu, idx) => (
@@ -852,7 +850,7 @@ const ResumeBuilderPage = () => {
                       <div className="text-[10px] text-neutral-400 font-semibold">{edu.school} • {edu.startDate} - {edu.current ? 'Present' : edu.endDate}</div>
                       <div className="text-[11px] text-neutral-500 leading-relaxed max-w-2xl whitespace-pre-wrap">{edu.description}</div>
                     </div>
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setEducations(educations.filter((_, i) => i !== idx))}
                       className="text-neutral-500 hover:text-red-500 transition-colors p-1"
@@ -870,49 +868,49 @@ const ResumeBuilderPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Title/Position</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         value={eduForm.degree}
                         onChange={e => setEduForm({ ...eduForm, degree: e.target.value })}
                         placeholder="Title/Position"
-                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none" 
+                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none"
                       />
                     </div>
                     <div>
                       <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Organization/Company</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         value={eduForm.school}
                         onChange={e => setEduForm({ ...eduForm, school: e.target.value })}
                         placeholder="Organization/Company"
-                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none" 
+                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none"
                       />
                     </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Start Date</label>
-                      <input 
-                        type="month" 
+                      <input
+                        type="month"
                         value={eduForm.startDate}
                         onChange={e => setEduForm({ ...eduForm, startDate: e.target.value })}
-                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none" 
+                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none"
                       />
                     </div>
                     <div>
                       <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">End Date</label>
-                      <input 
-                        type="month" 
+                      <input
+                        type="month"
                         value={eduForm.endDate}
                         onChange={e => setEduForm({ ...eduForm, endDate: e.target.value })}
                         disabled={eduForm.current}
-                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none disabled:opacity-30" 
+                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none disabled:opacity-30"
                       />
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       id="current-edu"
                       checked={eduForm.current}
                       onChange={e => setEduForm({ ...eduForm, current: e.target.checked, endDate: e.target.checked ? '' : eduForm.endDate })}
@@ -921,15 +919,15 @@ const ResumeBuilderPage = () => {
                     <label htmlFor="current-edu" className="text-xs text-neutral-400 font-medium select-none cursor-pointer">Current Education</label>
                   </div>
                   <div>
-                    <textarea 
+                    <textarea
                       value={eduForm.description}
                       onChange={e => setEduForm({ ...eduForm, description: e.target.value })}
                       placeholder="Description of your education"
-                      className="w-full h-32 bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none resize-none" 
+                      className="w-full h-32 bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none resize-none"
                     />
                   </div>
                   <div className="flex items-center justify-between pt-2">
-                    <button 
+                    <button
                       type="button"
                       onClick={() => handleImproveWithAI('education')}
                       disabled={actionLoading}
@@ -939,7 +937,7 @@ const ResumeBuilderPage = () => {
                       <span>Improve with AI</span>
                     </button>
                     <div className="flex items-center gap-2">
-                      <button 
+                      <button
                         type="button"
                         onClick={() => {
                           setShowAddEducation(false);
@@ -949,7 +947,7 @@ const ResumeBuilderPage = () => {
                       >
                         Cancel
                       </button>
-                      <button 
+                      <button
                         type="button"
                         onClick={() => {
                           if (eduForm.degree && eduForm.school) {
@@ -966,8 +964,8 @@ const ResumeBuilderPage = () => {
                   </div>
                 </div>
               ) : (
-                <button 
-                  onClick={() => setShowAddEducation(true)} 
+                <button
+                  onClick={() => setShowAddEducation(true)}
                   className="w-full py-3 bg-[#09090b] hover:bg-neutral-900 border border-neutral-800 rounded-lg text-xs font-semibold text-neutral-300 flex items-center justify-center gap-1.5 transition-all"
                 >
                   <PlusCircle className="w-4 h-4" />
@@ -979,7 +977,7 @@ const ResumeBuilderPage = () => {
             {/* Projects */}
             <div className="p-6 rounded-xl border border-neutral-900 bg-[#09090b] space-y-4">
               <h3 className="font-bold text-white text-sm">Projects</h3>
-              
+
               {/* Existing list */}
               <div className="space-y-3">
                 {projects.map((proj, idx) => (
@@ -989,7 +987,7 @@ const ResumeBuilderPage = () => {
                       <div className="text-[10px] text-neutral-400 font-semibold">{proj.technologies} • {proj.startDate} - {proj.current ? 'Present' : proj.endDate}</div>
                       <div className="text-[11px] text-neutral-500 leading-relaxed max-w-2xl whitespace-pre-wrap">{proj.description}</div>
                     </div>
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setProjects(projects.filter((_, i) => i !== idx))}
                       className="text-neutral-500 hover:text-red-500 transition-colors p-1"
@@ -1007,49 +1005,49 @@ const ResumeBuilderPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Title/Position</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         value={projForm.title}
                         onChange={e => setProjForm({ ...projForm, title: e.target.value })}
                         placeholder="Title/Position"
-                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none" 
+                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none"
                       />
                     </div>
                     <div>
                       <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Organization/Company</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         value={projForm.technologies}
                         onChange={e => setProjForm({ ...projForm, technologies: e.target.value })}
                         placeholder="Organization/Company"
-                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none" 
+                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none"
                       />
                     </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Start Date</label>
-                      <input 
-                        type="month" 
+                      <input
+                        type="month"
                         value={projForm.startDate}
                         onChange={e => setProjForm({ ...projForm, startDate: e.target.value })}
-                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none" 
+                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none"
                       />
                     </div>
                     <div>
                       <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">End Date</label>
-                      <input 
-                        type="month" 
+                      <input
+                        type="month"
                         value={projForm.endDate}
                         onChange={e => setProjForm({ ...projForm, endDate: e.target.value })}
                         disabled={projForm.current}
-                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none disabled:opacity-30" 
+                        className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none disabled:opacity-30"
                       />
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       id="current-proj"
                       checked={projForm.current}
                       onChange={e => setProjForm({ ...projForm, current: e.target.checked, endDate: e.target.checked ? '' : projForm.endDate })}
@@ -1058,15 +1056,15 @@ const ResumeBuilderPage = () => {
                     <label htmlFor="current-proj" className="text-xs text-neutral-400 font-medium select-none cursor-pointer">Current Project</label>
                   </div>
                   <div>
-                    <textarea 
+                    <textarea
                       value={projForm.description}
                       onChange={e => setProjForm({ ...projForm, description: e.target.value })}
                       placeholder="Description of your project"
-                      className="w-full h-32 bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none resize-none" 
+                      className="w-full h-32 bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white focus:outline-none resize-none"
                     />
                   </div>
                   <div className="flex items-center justify-between pt-2">
-                    <button 
+                    <button
                       type="button"
                       onClick={() => handleImproveWithAI('project')}
                       disabled={actionLoading}
@@ -1076,7 +1074,7 @@ const ResumeBuilderPage = () => {
                       <span>Improve with AI</span>
                     </button>
                     <div className="flex items-center gap-2">
-                      <button 
+                      <button
                         type="button"
                         onClick={() => {
                           setShowAddProject(false);
@@ -1086,7 +1084,7 @@ const ResumeBuilderPage = () => {
                       >
                         Cancel
                       </button>
-                      <button 
+                      <button
                         type="button"
                         onClick={() => {
                           if (projForm.title && projForm.technologies) {
@@ -1103,8 +1101,8 @@ const ResumeBuilderPage = () => {
                   </div>
                 </div>
               ) : (
-                <button 
-                  onClick={() => setShowAddProject(true)} 
+                <button
+                  onClick={() => setShowAddProject(true)}
                   className="w-full py-3 bg-[#09090b] hover:bg-neutral-900 border border-neutral-800 rounded-lg text-xs font-semibold text-neutral-300 flex items-center justify-center gap-1.5 transition-all"
                 >
                   <PlusCircle className="w-4 h-4" />
@@ -1117,15 +1115,14 @@ const ResumeBuilderPage = () => {
         ) : (
           /* MARKDOWN SOURCE & RENDERED SHEET PREVIEW MODE */
           <div className="space-y-4">
-            
+
             {/* Edit / Preview Toggle Button */}
-            <button 
+            <button
               onClick={() => setIsEditingMarkdown(!isEditingMarkdown)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-                isEditingMarkdown
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${isEditingMarkdown
                   ? 'bg-neutral-800 border-neutral-700 text-white'
                   : 'bg-neutral-900 border-neutral-850 text-neutral-300 hover:text-white'
-              }`}
+                }`}
             >
               <Edit2 className="w-3.5 h-3.5" />
               <span>Edit Resume</span>
@@ -1151,7 +1148,7 @@ const ResumeBuilderPage = () => {
       <footer className="border-t border-neutral-900 py-12 bg-black relative z-10 text-center">
         <div className="container mx-auto px-6">
           <div className="text-xs text-neutral-500 font-medium">
-            Made with 💖 by RoadsideCoder
+            &copy; {new Date().getFullYear()} SensAI. All rights reserved.
           </div>
         </div>
       </footer>
