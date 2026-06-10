@@ -18,8 +18,9 @@ export const getIndustryInsights = async (req, res, next) => {
     // Check if insights already exist in MongoDB
     let insights = await IndustryInsight.findOne({ industry });
 
-    // If insights exist and are not expired, return them
-    if (insights && insights.nextUpdate > new Date()) {
+    // If insights exist, are not expired, contain sufficient roles, and short skills, return them
+    const hasLongSkill = insights?.topSkills?.some(s => s.length > 20 || s.includes('('));
+    if (insights && insights.nextUpdate > new Date() && insights.salaryRanges && insights.salaryRanges.length >= 5 && !hasLongSkill) {
       return res.json(insights);
     }
 

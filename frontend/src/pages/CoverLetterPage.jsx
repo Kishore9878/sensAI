@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import axiosInstance from '../utils/axiosInstance';
 import { 
   Sparkles, 
@@ -11,11 +12,20 @@ import {
   ArrowLeft,
   LayoutGrid,
   ChevronDown,
-  FileText
+  FileText,
+  User,
+  LogOut
 } from 'lucide-react';
 
 const CoverLetterPage = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   // Cover Letter Data State
   const [letters, setLetters] = useState([]);
@@ -196,12 +206,43 @@ const CoverLetterPage = () => {
               )}
             </div>
 
-            <div className="w-8 h-8 rounded-full border border-neutral-700 bg-neutral-800 flex items-center justify-center overflow-hidden">
-              <img 
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100&q=80"
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
+            <div className="relative">
+              <button 
+                onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                className="w-8 h-8 rounded-full border border-neutral-700 bg-neutral-800 flex items-center justify-center overflow-hidden hover:border-neutral-500 transition-all duration-200"
+              >
+                <img 
+                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100&q=80"
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              </button>
+
+              {profileDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-56 bg-neutral-950 border border-neutral-800 rounded-lg shadow-xl py-1 z-50">
+                  {user && (
+                    <div className="px-4 py-2 border-b border-neutral-900">
+                      <p className="text-xs font-bold text-white truncate">{user.name}</p>
+                      <p className="text-[10px] text-neutral-500 truncate">{user.email}</p>
+                    </div>
+                  )}
+                  <Link 
+                    to="/complete-profile" 
+                    onClick={() => setProfileDropdownOpen(false)}
+                    className="block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all flex items-center gap-2"
+                  >
+                    <User className="w-3.5 h-3.5 animate-pulse text-indigo-400" />
+                    Complete Profile
+                  </Link>
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-xs text-red-450 hover:bg-neutral-900 hover:text-red-300 transition-all flex items-center gap-2"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 

@@ -61,22 +61,24 @@ export const generateAIIndustryInsights = async (industry) => {
     You are an expert career analyst. Generate industry insights for the industry "${industry}".
     Provide the output in STRICT JSON format, with the following keys and data types:
     {
-      "growthRate": number (e.g., 5.4),
+      "growthRate": number (e.g., 7.5),
       "demandLevel": "High" | "Medium" | "Low",
-      "topSkills": ["skill1", "skill2", ...],
+      "topSkills": ["short_skill1", "short_skill2", ...],
       "marketOutlook": "Positive" | "Neutral" | "Negative",
       "keyTrends": ["trend1", "trend2", ...],
       "recommendedSkills": ["skill1", "skill2", ...],
       "salaryRanges": [
         {
           "role": "role name",
-          "min": number,
-          "max": number,
-          "median": number,
+          "min": number (salary in thousands, e.g. 80),
+          "max": number (salary in thousands, e.g. 155),
+          "median": number (salary in thousands, e.g. 120),
           "location": "location name (optional)"
         }
       ]
     }
+    Make sure you generate 5 to 6 standard, diverse job roles representing the industry "${industry}". For example, if the industry is related to tech or software, generate standard roles such as Software Engineer, Data Scientist, Frontend Developer, Backend Developer, DevOps Engineer, and Mobile Developer. Make sure the salaries are in thousands (e.g. min: 80, median: 120, max: 155).
+    For the "topSkills" list, generate exactly 5 very short, standard industry skill names (each 1 to 2 words maximum, e.g. "React.js", "Docker", "AWS", "Python", "SQL"). Avoid long explanations or descriptive names.
     Ensure the JSON is perfectly valid. Do not write any text outside of the JSON block.
   `;
 
