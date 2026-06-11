@@ -67,7 +67,17 @@ export const generateResume = async (req, res, next) => {
  * @access  Private
  */
 export const updateResume = async (req, res, next) => {
-  const { content, atsScore, feedback } = req.body;
+  const { 
+    content, 
+    atsScore, 
+    feedback,
+    contactInfo,
+    summary,
+    skills,
+    experiences,
+    educations,
+    projects
+  } = req.body;
 
   try {
     let resume = await Resume.findOne({ userId: req.user._id });
@@ -76,6 +86,12 @@ export const updateResume = async (req, res, next) => {
       resume.content = content;
       if (atsScore !== undefined) resume.atsScore = atsScore;
       if (feedback !== undefined) resume.feedback = feedback;
+      if (contactInfo !== undefined) resume.contactInfo = contactInfo;
+      if (summary !== undefined) resume.summary = summary;
+      if (skills !== undefined) resume.skills = skills;
+      if (experiences !== undefined) resume.experiences = experiences;
+      if (educations !== undefined) resume.educations = educations;
+      if (projects !== undefined) resume.projects = projects;
       await resume.save();
     } else {
       resume = await Resume.create({
@@ -83,6 +99,12 @@ export const updateResume = async (req, res, next) => {
         content,
         atsScore: atsScore || 0,
         feedback: feedback || '',
+        contactInfo,
+        summary,
+        skills,
+        experiences,
+        educations,
+        projects
       });
     }
 

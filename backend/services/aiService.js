@@ -789,6 +789,10 @@ export const improveResumeDescription = async (description, industry = '') => {
       You are an expert resume writer.
       Optimize the following professional description/bullet-point to be more professional, impactful, and action-oriented.
       Follow the STAR format and use strong action verbs and include metrics if applicable.
+      
+      CRITICAL: Structure each improved bullet point using the formula: Action Verb + Technology + Task + Impact.
+      For example, convert weak bullets like "Worked on authentication system" into "Implemented JWT-based authentication and role-based access control for secure user management."
+      
       If possible, incorporate industry standard keywords for "${industry}".
       
       Original Description:
