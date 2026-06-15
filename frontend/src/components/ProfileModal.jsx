@@ -34,6 +34,7 @@ export const ProfileModal = ({ isOpen, onClose }) => {
   const [experience, setExperience] = useState('');
   const [skills, setSkills] = useState('');
   const [bio, setBio] = useState('');
+  const [role, setRole] = useState('');
 
   // Status/Error States
   const [error, setError] = useState('');
@@ -58,6 +59,7 @@ export const ProfileModal = ({ isOpen, onClose }) => {
             setExperience(res.data.experience || '');
             setSkills(Array.isArray(res.data.skills) ? res.data.skills.join(', ') : res.data.skills || '');
             setBio(res.data.bio || '');
+            setRole(res.data.role || '');
           }
         } catch (err) {
           console.error('Failed to fetch professional profile:', err);
@@ -136,6 +138,7 @@ export const ProfileModal = ({ isOpen, onClose }) => {
         skills,
         experience: Number(experience) || 0,
         industry,
+        role,
         education: [],
         linkedinUrl: '',
         githubUrl: '',
@@ -405,6 +408,20 @@ export const ProfileModal = ({ isOpen, onClose }) => {
                       <option value="education-teaching">Education - Teaching</option>
                     </select>
                   </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-xs font-semibold text-neutral-600">Target Role</label>
+                    <input
+                      type="text"
+                      value={role}
+                      onChange={(e) => setRole(e.target.value)}
+                      placeholder="e.g., Software Engineer, Product Manager"
+                      className="w-full px-3 py-2 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-neutral-500 text-neutral-800 bg-white"
+                      required
+                    />
+                  </div>
+
+
 
                   <div className="space-y-1">
                     <label className="block text-xs font-semibold text-neutral-600">Years of Experience</label>

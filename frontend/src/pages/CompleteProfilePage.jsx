@@ -13,6 +13,7 @@ const CompleteProfilePage = () => {
   const [experience, setExperience] = useState('');
   const [skills, setSkills] = useState('');
   const [bio, setBio] = useState('');
+  const [role, setRole] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -35,6 +36,7 @@ const CompleteProfilePage = () => {
         skills,
         experience: Number(experience) || 0,
         industry,
+        role,
         education: [],
         linkedinUrl: '',
         githubUrl: '',
@@ -147,7 +149,7 @@ const CompleteProfilePage = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Industry field */}
+             {/* Industry field */}
             <div className="space-y-2">
               <label className="block text-xs font-bold text-neutral-200">Industry</label>
               <select
@@ -166,6 +168,19 @@ const CompleteProfilePage = () => {
                 <option value="marketing-digital">Marketing - Digital Marketing</option>
                 <option value="education-teaching">Education - Teaching</option>
               </select>
+            </div>
+
+            {/* Target Role field */}
+            <div className="space-y-2">
+              <label className="block text-xs font-bold text-neutral-200">Target Role</label>
+              <input
+                type="text"
+                required
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                placeholder="e.g., Software Engineer, Marketing Analyst"
+                className="block w-full px-3 py-2.5 bg-black border border-neutral-800 rounded-lg text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-600 transition-colors"
+              />
             </div>
 
             {/* Years of Experience field */}

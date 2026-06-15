@@ -34,6 +34,7 @@ export const updateProfile = async (req, res, next) => {
     githubUrl,
     resumeUrl,
     careerGoals,
+    role,
   } = req.body;
 
   try {
@@ -50,6 +51,7 @@ export const updateProfile = async (req, res, next) => {
       githubUrl,
       resumeUrl,
       careerGoals,
+      role,
     };
 
     if (profile) {

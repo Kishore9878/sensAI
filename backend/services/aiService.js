@@ -500,7 +500,7 @@ export const generateAIIndustryInsights = async (industry) => {
 /**
  * Generate Interview Questions
  */
-export const generateAIInterviewQuestions = async (industry, role, category) => {
+export const generateAIInterviewQuestions = async (industry, role, skills = []) => {
   const getMock = () => {
     const ind = (industry || '').toLowerCase();
     let pool = techPool;
@@ -525,9 +525,11 @@ export const generateAIInterviewQuestions = async (industry, role, category) => 
 
   try {
     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    const skillsString = Array.isArray(skills) ? skills.join(', ') : skills || 'None specified';
     const prompt = `
       Generate 10 multiple-choice interview questions for a candidate in the industry "${industry}", applying for the role "${role}".
-      The interview type/category is "${category}" (e.g. Technical, Behavioral, System Design).
+      The candidate has specified the following key skills: ${skillsString}.
+      Ensure the questions assess competence in these skills, as well as general knowledge of the industry.
       
       Random seed: ${Math.random()}. Ensure you generate a completely unique, fresh, and randomized set of questions covering different sub-topics. Do not repeat questions from previous runs.
       
@@ -607,15 +609,60 @@ export const evaluateAIInterviewAnswers = async (questionsAndAnswers) => {
 };
 
 /**
+ * Generate AI Improvement Tip based on performance, industry, role, and skills
+ */
+export const generateAIImprovementTip = async (score, category, industry, role, skills = [], incorrectQuestions = []) => {
+  const getMock = () => {
+    if (score >= 80) {
+      return `Excellent performance in your ${category} mock interview! You have shown strong competency. Keep staying updated with industry trends in ${industry}.`;
+    } else if (score >= 50) {
+      return `Decent effort! Focus on improving your understanding of ${category} concepts related to ${Array.isArray(skills) ? skills.slice(0, 3).join(', ') : skills}. Review the questions you missed to solidify your fundamentals.`;
+    } else {
+      return `To improve in ${category}, focus on core concepts in ${industry}. Pay close attention to ${Array.isArray(skills) ? skills.slice(0, 3).join(', ') : skills} and study the correct explanations for the questions you got wrong.`;
+    }
+  };
+
+  const genAI = getAIClient();
+  if (!genAI) {
+    return getMock();
+  }
+
+  try {
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    const skillsString = Array.isArray(skills) ? skills.join(', ') : skills || 'None specified';
+    const wrongQsText = incorrectQuestions.map((q, i) => `${i+1}. Q: ${q.question} | Correct Answer: ${q.answer}`).join('\n');
+    
+    const prompt = `
+      You are an expert career coach and technical interviewer.
+      The candidate just took a mock interview quiz for the role "${role}" in the industry "${industry}".
+      The interview category was "${category}".
+      The candidate scored ${score}/100.
+      The candidate's key skills are: ${skillsString}.
+      
+      Here are the questions the candidate got wrong (if any):
+      ${wrongQsText || 'None - they got everything correct!'}
+      
+      Generate a concise, highly personalized, and actionable improvement tip (1-2 sentences) for this candidate based on their score and performance on these questions. Suggest what specific topics or skills they should practice or review next. Do not output any JSON, markdown headers, or intro text. Output ONLY the tip text.
+    `;
+
+    const result = await model.generateContent(prompt);
+    return result.response.text().trim();
+  } catch (error) {
+    console.error(`[AI Service Error] generateAIImprovementTip failed:`, error.message);
+    return getMock();
+  }
+};
+
+/**
  * Generate Cover Letter
  */
 export const generateAICoverLetter = async (profile, jobDescription, companyName, jobTitle) => {
   const getMock = () => {
-    const skills = Array.isArray(profile.skills) && profile.skills.length > 0 
-      ? profile.skills.join(', ') 
+    const skills = Array.isArray(profile.skills) && profile.skills.length > 0
+      ? profile.skills.join(', ')
       : 'Node.js and PostgreSQL';
     const experience = profile.experience || 4;
-    
+
     return `[Your Name] [Your Address] [Your Phone Number] [Your Email]
 
 [Date]
@@ -640,7 +687,7 @@ Sincerely,
   };
 
   const genAI = getAIClient();
-  
+
   const bio = profile.bio || 'Not specified';
   const skills = Array.isArray(profile.skills) ? profile.skills.join(', ') : 'Not specified';
   const experience = profile.experience || 0;
@@ -730,7 +777,7 @@ ${educationList.map(e => `- ${e.degree} in ${e.fieldOfStudy} at ${e.school} (${e
   };
 
   const genAI = getAIClient();
-  
+
   const skills = Array.isArray(profile.skills) ? profile.skills.join(', ') : 'Not specified';
   const experience = profile.experience || 0;
   const education = Array.isArray(profile.education) ? JSON.stringify(profile.education) : 'Not specified';

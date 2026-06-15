@@ -14,11 +14,11 @@ const run = async () => {
     console.log(`Testing with industry: ${profile.industry}`);
     
     console.log('\n--- SESSION 1 QUESTIONS ---');
-    const q1 = await generateAIInterviewQuestions(profile.industry, 'Software Engineer', 'Technical');
+    const q1 = await generateAIInterviewQuestions(profile.industry, 'Software Engineer', profile.skills || []);
     q1.forEach((q, idx) => console.log(`${idx + 1}. ${q.question}`));
     
     console.log('\n--- SESSION 2 QUESTIONS ---');
-    const q2 = await generateAIInterviewQuestions(profile.industry, 'Software Engineer', 'Technical');
+    const q2 = await generateAIInterviewQuestions(profile.industry, 'Software Engineer', profile.skills || []);
     q2.forEach((q, idx) => console.log(`${idx + 1}. ${q.question}`));
     
     await mongoose.disconnect();

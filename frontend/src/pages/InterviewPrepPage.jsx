@@ -640,13 +640,6 @@ const InterviewPrepPage = () => {
                   ))}
                 </div>
 
-                {/* Optional explanation reveal */}
-                {showExplanation && (
-                  <div className="p-4 rounded-xl border border-neutral-900 bg-[#0c0c0e] text-xs text-neutral-300 leading-relaxed animate-in fade-in duration-200">
-                    <span className="font-bold text-white">Explanation: </span>
-                    {currentSession.questions[currentQuestionIndex].feedback || "No explanation provided for this question."}
-                  </div>
-                )}
               </div>
 
               {/* Wizard Navigation Actions */}
@@ -658,12 +651,6 @@ const InterviewPrepPage = () => {
                     className="px-4 py-2 border border-neutral-850 hover:bg-neutral-900 rounded-lg text-xs font-semibold text-neutral-400 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent transition-all"
                   >
                     Back
-                  </button>
-                  <button
-                    onClick={() => setShowExplanation(!showExplanation)}
-                    className="px-4 py-2 border border-neutral-850 hover:bg-neutral-900 rounded-lg text-xs font-semibold text-neutral-400 hover:text-white transition-all"
-                  >
-                    {showExplanation ? 'Hide Explanation' : 'Show Explanation'}
                   </button>
                 </div>
 
