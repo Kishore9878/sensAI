@@ -3,8 +3,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
-
-// Load environment variables
+ 
+// Load environment variables from .env
 dotenv.config();
 
 // Connect to MongoDB

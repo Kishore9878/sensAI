@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { ProfileModal } from './ProfileModal';
 import { 
   Sparkles, 
   LayoutDashboard, 
@@ -18,6 +19,7 @@ export const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -93,7 +95,10 @@ export const DashboardLayout = ({ children }) => {
         {/* User Profile Summary & Logout */}
         <div className="p-4 border-t border-border space-y-2">
           {user && (
-            <div className="flex items-center gap-3 px-4 py-2 border border-border bg-black/30 rounded-lg">
+            <button 
+              onClick={() => setIsProfileOpen(true)}
+              className="w-full flex items-center gap-3 px-4 py-2 border border-border bg-black/30 hover:bg-black/50 hover:border-indigo-500/40 rounded-lg text-left transition-all duration-200 cursor-pointer"
+            >
               <div className="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-bold border border-indigo-500/20 text-sm uppercase">
                 {user.name.charAt(0)}
               </div>
@@ -101,7 +106,7 @@ export const DashboardLayout = ({ children }) => {
                 <p className="text-sm font-semibold text-white truncate">{user.name}</p>
                 <p className="text-xs text-muted-foreground truncate">{user.email}</p>
               </div>
-            </div>
+            </button>
           )}
           <button
             onClick={handleLogout}
@@ -117,6 +122,8 @@ export const DashboardLayout = ({ children }) => {
       <main className="flex-1 overflow-y-auto h-screen p-6 md:p-10 relative">
         {children}
       </main>
+
+      <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
     </div>
   );
 };

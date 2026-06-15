@@ -14,6 +14,7 @@ import {
   User,
   LogOut
 } from 'lucide-react';
+import { ProfileModal } from '../components/ProfileModal';
 
 const defaultMockData = {
   marketOutlook: 'Positive',
@@ -47,6 +48,7 @@ const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [toolsDropdownOpen, setToolsDropdownOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [hoveredRole, setHoveredRole] = useState(null);
 
   const handleLogout = () => {
@@ -236,14 +238,13 @@ const DashboardPage = () => {
                       <p className="text-[10px] text-neutral-500 truncate">{user.email}</p>
                     </div>
                   )}
-                  <Link 
-                    to="/complete-profile" 
-                    onClick={() => setProfileDropdownOpen(false)}
-                    className="block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all flex items-center gap-2"
+                  <button 
+                    onClick={() => { setProfileDropdownOpen(false); setIsProfileOpen(true); }}
+                    className="w-full text-left block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all flex items-center gap-2 cursor-pointer"
                   >
                     <User className="w-3.5 h-3.5 animate-pulse text-indigo-400" />
                     Complete Profile
-                  </Link>
+                  </button>
                   <button 
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-xs text-red-450 hover:bg-neutral-900 hover:text-red-300 transition-all flex items-center gap-2"
@@ -497,6 +498,8 @@ const DashboardPage = () => {
           </div>
         </div>
       </footer>
+
+      <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
     </div>
   );
 };

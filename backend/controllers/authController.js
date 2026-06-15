@@ -104,3 +104,83 @@ export const getUserMe = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * @desc    Update user profile (name/email)
+ * @route   PUT /api/auth/profile
+ * @access  Private
+ */
+export const updateUserProfile = async (req, res, next) => {
+  const { name, email } = req.body;
+
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      res.status(404);
+      throw new Error('User not found');
+    }
+
+    if (name) user.name = name;
+    if (email) {
+      if (email.toLowerCase() !== user.email.toLowerCase()) {
+        const emailExists = await User.findOne({ email });
+        if (emailExists) {
+          res.status(400);
+          throw new Error('Email is already in use by another account');
+        }
+      }
+      user.email = email;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      profileCompleted: updatedUser.profileCompleted,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Update user password
+ * @route   PUT /api/auth/password
+ * @access  Private
+ */
+export const updateUserPassword = async (req, res, next) => {
+  const { oldPassword, newPassword } = req.body;
+
+  try {
+    if (!oldPassword || !newPassword) {
+      res.status(400);
+      throw new Error('Please enter both old and new passwords');
+    }
+
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      res.status(404);
+      throw new Error('User not found');
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      res.status(401);
+      throw new Error('Incorrect old password');
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+
+    await user.save();
+
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+

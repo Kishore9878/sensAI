@@ -74,6 +74,11 @@ export const AuthProvider = ({ children }) => {
     setUser(prevUser => prevUser ? { ...prevUser, profileCompleted: status } : null);
   };
 
+  // Update user profile details locally
+  const updateUser = (data) => {
+    setUser(prevUser => prevUser ? { ...prevUser, ...data } : null);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -83,6 +88,7 @@ export const AuthProvider = ({ children }) => {
         signup,
         logout,
         setProfileCompleted,
+        updateUser,
       }}
     >
       {children}
