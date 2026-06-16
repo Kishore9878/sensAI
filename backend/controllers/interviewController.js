@@ -27,7 +27,8 @@ export const startInterviewSession = async (req, res, next) => {
     const aiQuestions = await generateAIInterviewQuestions(
       profile.industry,
       profile.role || profile.careerGoals || 'Professional Developer',
-      profile.skills || []
+      profile.skills || [],
+      category
     );
 
     // Create session in database
@@ -123,8 +124,13 @@ export const submitInterviewAnswers = async (req, res, next) => {
  * @access  Private
  */
 export const getInterviewSessions = async (req, res, next) => {
+  const { category } = req.query;
   try {
-    const sessions = await InterviewSession.find({ userId: req.user._id }).sort({ createdAt: -1 });
+    const filter = { userId: req.user._id };
+    if (category) {
+      filter.category = category;
+    }
+    const sessions = await InterviewSession.find(filter).sort({ createdAt: -1 });
     res.json(sessions);
   } catch (error) {
     next(error);

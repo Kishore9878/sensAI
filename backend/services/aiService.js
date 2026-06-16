@@ -500,7 +500,7 @@ export const generateAIIndustryInsights = async (industry) => {
 /**
  * Generate Interview Questions
  */
-export const generateAIInterviewQuestions = async (industry, role, skills = []) => {
+export const generateAIInterviewQuestions = async (industry, role, skills = [], interviewType = 'technical') => {
   const getMock = () => {
     const ind = (industry || '').toLowerCase();
     let pool = techPool;
@@ -526,10 +526,61 @@ export const generateAIInterviewQuestions = async (industry, role, skills = []) 
   try {
     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
     const skillsString = Array.isArray(skills) ? skills.join(', ') : skills || 'None specified';
+    
+    let typeSpecificInstructions = '';
+    const type = (interviewType || '').toLowerCase();
+    
+    if (type === 'technical') {
+      typeSpecificInstructions = `
+        The interview type is TECHNICAL.
+        Generate technical questions based strictly on:
+        - Industry: "${industry}"
+        - Target Role: "${role}"
+        - Candidate's key skills: ${skillsString}
+        
+        The questions must assess competence in these specific skills and general technical knowledge of the industry. The questions should be tailored to the user's profile and range from core principles to intermediate/advanced troubleshooting, architecture, and debugging concepts.
+      `;
+    } else if (type === 'behavioral') {
+      typeSpecificInstructions = `
+        The interview type is BEHAVIORAL.
+        Generate behavioral questions focused on assessing the candidate's soft skills and past experiences:
+        - Leadership and Teamwork
+        - Communication and Conflict Resolution
+        - Ownership and Problem Solving
+        - Stakeholder Management and Decision Making
+        
+        Where appropriate, base questions on STAR-style scenarios (Situation, Task, Action, Result) to evaluate how the candidate behaves in professional environments.
+      `;
+    } else if (type === 'system_design') {
+      typeSpecificInstructions = `
+        The interview type is SYSTEM DESIGN.
+        Generate system design and architecture questions focused on:
+        - System Architecture & Scalability
+        - Distributed Systems & Load Balancing
+        - Databases, Caching & Data Storage
+        - Reliability, Performance Optimization & Security Considerations
+        
+        Adapt the complexity of the questions to be appropriate for the target role "${role}" and the industry "${industry}".
+      `;
+    } else if (type === 'general') {
+      typeSpecificInstructions = `
+        The interview type is GENERAL.
+        Generate broad career-oriented and general interview questions:
+        - Tell me about yourself / Walk me through your resume
+        - Career goals & motivation (Why this role? Why this company?)
+        - Strengths and weaknesses / Professional achievements
+        - General industry awareness
+      `;
+    } else {
+      typeSpecificInstructions = `
+        Generate interview questions based on the candidate's industry "${industry}", applying for the role "${role}", and technical skills: ${skillsString}.
+      `;
+    }
+
     const prompt = `
-      Generate 10 multiple-choice interview questions for a candidate in the industry "${industry}", applying for the role "${role}".
-      The candidate has specified the following key skills: ${skillsString}.
-      Ensure the questions assess competence in these skills, as well as general knowledge of the industry.
+      Generate 10 multiple-choice interview questions for a candidate in the industry "${industry}" applying for the role "${role}".
+      
+      ${typeSpecificInstructions}
       
       Random seed: ${Math.random()}. Ensure you generate a completely unique, fresh, and randomized set of questions covering different sub-topics. Do not repeat questions from previous runs.
       

@@ -12,6 +12,7 @@ import DashboardPage from './pages/DashboardPage';
 import ResumeBuilderPage from './pages/ResumeBuilderPage';
 import CoverLetterPage from './pages/CoverLetterPage';
 import InterviewPrepPage from './pages/InterviewPrepPage';
+import InterviewTypeSelectionPage from './pages/InterviewTypeSelectionPage';
 
 function App() {
   return (
@@ -37,7 +38,8 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/resume" element={<ResumeBuilderPage />} />
             <Route path="/cover-letter" element={<CoverLetterPage />} />
-            <Route path="/interview" element={<InterviewPrepPage />} />
+            <Route path="/interview" element={<InterviewTypeSelectionPage />} />
+            <Route path="/interview/prep" element={<InterviewPrepPage />} />
           </Route>
 
           {/* Fallback route */}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import axiosInstance from '../utils/axiosInstance';
 import { 
@@ -31,6 +31,18 @@ const InterviewPrepPage = () => {
     navigate('/');
   };
 
+  const [searchParams] = useSearchParams();
+  const initialType = searchParams.get('type') || sessionStorage.getItem('sensai_interview_type') || 'technical';
+  const [interviewType, setInterviewType] = useState(initialType);
+
+  useEffect(() => {
+    const typeParam = searchParams.get('type');
+    if (typeParam) {
+      sessionStorage.setItem('sensai_interview_type', typeParam);
+      setInterviewType(typeParam);
+    }
+  }, [searchParams]);
+
   // Session States
   const [sessions, setSessions] = useState([]);
   const [activeSession, setActiveSession] = useState(null); // When set, views this quiz's results on the page
@@ -58,7 +70,7 @@ const InterviewPrepPage = () => {
     try {
       setLoading(true);
       setError('');
-      const res = await axiosInstance.get('/interview');
+      const res = await axiosInstance.get(`/interview?category=${interviewType}`);
       setSessions(res.data);
     } catch (err) {
       console.error(err);
@@ -70,14 +82,14 @@ const InterviewPrepPage = () => {
 
   useEffect(() => {
     fetchSessions();
-  }, []);
+  }, [interviewType]);
 
   // Start Session (Mock Interview API Call)
   const handleStartSession = async () => {
     setActionLoading(true);
     setError('');
     try {
-      const res = await axiosInstance.post('/interview/start', { category: 'Technical' });
+      const res = await axiosInstance.post('/interview/start', { category: interviewType });
       setCurrentSession(res.data);
       setAnswers({});
       setCurrentQuestionIndex(0);
@@ -445,8 +457,17 @@ const InterviewPrepPage = () => {
           <div className="space-y-6">
             
             {/* Header Title */}
-            <div>
-              <h1 className="text-4xl font-extrabold text-white tracking-tight">Interview Preparation</h1>
+            <div className="space-y-2">
+              <Link
+                to="/interview"
+                className="inline-flex items-center gap-1.5 text-xs text-neutral-450 hover:text-white font-semibold transition-colors duration-200"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Back to Interview Type Selection</span>
+              </Link>
+              <h1 className="text-4xl font-extrabold text-white tracking-tight capitalize">
+                {(interviewType || '').replace('_', ' ')} Interview Prep
+              </h1>
             </div>
 
             {/* Top Stat Summary Grid */}
@@ -560,8 +581,8 @@ const InterviewPrepPage = () => {
             </button>
 
             <div>
-              <h1 className="text-4xl font-extrabold text-white tracking-tight">Mock Interview</h1>
-              <p className="text-xs text-neutral-500 mt-1">Test your knowledge with industry-specific questions</p>
+              <h1 className="text-4xl font-extrabold text-white tracking-tight capitalize">{(interviewType || '').replace('_', ' ')} Mock Interview</h1>
+              <p className="text-xs text-neutral-500 mt-1">Test your knowledge with custom targeted questions</p>
             </div>
 
             <div className="p-6 rounded-xl border border-neutral-900 bg-[#09090b] space-y-5">
@@ -602,8 +623,8 @@ const InterviewPrepPage = () => {
             </button>
 
             <div>
-              <h1 className="text-4xl font-extrabold text-white tracking-tight">Mock Interview</h1>
-              <p className="text-xs text-neutral-500 mt-1">Test your knowledge with industry-specific questions</p>
+              <h1 className="text-4xl font-extrabold text-white tracking-tight capitalize">{(interviewType || '').replace('_', ' ')} Interview</h1>
+              <p className="text-xs text-neutral-500 mt-1">Answer the questions based on the selected interview type</p>
             </div>
 
             <div className="p-6 rounded-xl border border-neutral-900 bg-[#09090b] space-y-6">
@@ -692,8 +713,8 @@ const InterviewPrepPage = () => {
             </button>
 
             <div>
-              <h1 className="text-4xl font-extrabold text-white tracking-tight">Mock Interview</h1>
-              <p className="text-xs text-neutral-500 mt-1">Test your knowledge with industry-specific questions</p>
+              <h1 className="text-4xl font-extrabold text-white tracking-tight capitalize">{(activeSession.category || '').replace('_', ' ')} Interview Results</h1>
+              <p className="text-xs text-neutral-500 mt-1">Review your performance and detailed question feedback</p>
             </div>
 
             <div className="p-6 rounded-xl border border-neutral-900 bg-[#09090b] space-y-6">
