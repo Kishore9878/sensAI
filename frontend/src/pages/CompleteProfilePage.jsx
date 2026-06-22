@@ -4,11 +4,110 @@ import { useAuth } from '../hooks/useAuth';
 import axiosInstance from '../utils/axiosInstance';
 import { Sparkles, LayoutGrid, ChevronDown } from 'lucide-react';
 
+const industrySpecializations = {
+  "Technology": [
+    "Software Development",
+    "IT Services",
+    "Cybersecurity",
+    "Cloud Computing",
+    "Artificial Intelligence/Machine Learning",
+    "Data Science & Analytics",
+    "Internet & Web Services",
+    "Robotics",
+    "Quantum Computing",
+    "Blockchain & Cryptocurrency",
+    "IoT (Internet of Things)"
+  ],
+  "Financial Services": [
+    "Investment Banking",
+    "Commercial Banking",
+    "Wealth Management",
+    "Asset Management",
+    "Insurance",
+    "FinTech",
+    "Accounting & Audit",
+    "Quantitative Finance",
+    "Risk Management"
+  ],
+  "Healthcare & Life Sciences": [
+    "Clinical Medicine",
+    "Biotechnology",
+    "Pharmaceuticals",
+    "Medical Devices",
+    "Healthcare Administration",
+    "Nursing",
+    "Digital Health / HealthTech",
+    "Public Health"
+  ],
+  "Manufacturing & Industrial": [
+    "Automotive",
+    "Aerospace & Defense",
+    "Chemical Manufacturing",
+    "Industrial Automation",
+    "Supply Chain & Logistics",
+    "Quality Assurance",
+    "Process Engineering"
+  ],
+  "Retail & E-commerce": [
+    "E-commerce Operations",
+    "Retail Management",
+    "Merchandising",
+    "Digital Marketing",
+    "Customer Experience",
+    "Inventory Management"
+  ],
+  "Media & Entertainment": [
+    "Film & Television",
+    "Music Industry",
+    "Journalism & Publishing",
+    "Digital Content Creation",
+    "Game Development",
+    "Advertising & Public Relations"
+  ],
+  "Education & Training": [
+    "K-12 Education",
+    "Higher Education",
+    "EdTech (Educational Technology)",
+    "Corporate Training",
+    "Curriculum Development",
+    "Special Education"
+  ],
+  "Energy & Utilities": [
+    "Oil & Gas",
+    "Renewable Energy (Solar, Wind, etc.)",
+    "Electrical Utilities",
+    "Water & Waste Management",
+    "Nuclear Energy",
+    "Grid Automation"
+  ],
+  "Professional Services": [
+    "Management Consulting",
+    "Legal Services",
+    "Strategy & Advisory",
+    "Human Resources & Recruiting",
+    "Project Management"
+  ],
+  "Telecommunications": [
+    "Network Engineering",
+    "5G & Wireless Communications",
+    "Fiber Optics",
+    "Satellite Communications",
+    "Telecom Operations"
+  ],
+  "Transportation & Logistics": [
+    "Supply Chain Management",
+    "Freight & Cargo Shipping",
+    "Public Transportation",
+    "Fleet Management",
+    "Warehousing & Distribution",
+    "Autonomous Vehicles"
+  ]
+};
+
 const CompleteProfilePage = () => {
   const { user, setProfileCompleted } = useAuth();
   const navigate = useNavigate();
 
-  // Basic Form States matching the screenshot
   const [industry, setIndustry] = useState('');
   const [experience, setExperience] = useState('');
   const [skills, setSkills] = useState('');
@@ -28,6 +127,11 @@ const CompleteProfilePage = () => {
       return;
     }
 
+    if (!role) {
+      setError('Please select a specialization.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -40,15 +144,11 @@ const CompleteProfilePage = () => {
         education: [],
         linkedinUrl: '',
         githubUrl: '',
-        careerGoals: bio.slice(0, 100) // Default goal matching bio snippet
+        careerGoals: bio.slice(0, 100)
       };
 
       await axiosInstance.post('/profile', payload);
-      
-      // Update local context
       setProfileCompleted(true);
-      
-      // Redirect to dashboard
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
@@ -119,12 +219,16 @@ const CompleteProfilePage = () => {
               )}
             </div>
 
-            <div className="w-8 h-8 rounded-full border border-neutral-700 bg-neutral-800 flex items-center justify-center overflow-hidden">
-              <img 
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100&q=80"
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
+            <div className="w-8 h-8 rounded-full border border-neutral-700 bg-neutral-800 flex items-center justify-center overflow-hidden text-xs font-bold text-white uppercase select-none">
+              {user?.imageUrl ? (
+                <img 
+                  src={user.imageUrl}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span>{user?.name?.charAt(0) || 'U'}</span>
+              )}
             </div>
           </div>
 
@@ -155,33 +259,44 @@ const CompleteProfilePage = () => {
               <select
                 value={industry}
                 required
-                onChange={(e) => setIndustry(e.target.value)}
-                className="block w-full px-3 py-2.5 bg-black border border-neutral-800 rounded-lg text-xs text-white focus:outline-none focus:border-neutral-600 transition-colors"
+                onChange={(e) => {
+                  setIndustry(e.target.value);
+                  setRole('');
+                }}
+                className="block w-full px-3 py-2.5 bg-black border border-neutral-800 rounded-lg text-xs text-white focus:outline-none focus:border-neutral-600 transition-colors cursor-pointer"
               >
                 <option value="" disabled>Select an industry</option>
-                <option value="tech-software-development">Tech - Software Development</option>
-                <option value="tech-data-science">Tech - Data Science & AI</option>
-                <option value="finance-investment-banking">Finance - Investment Banking</option>
-                <option value="finance-accounting">Finance - Accounting</option>
-                <option value="healthcare-administration">Healthcare - Administration</option>
-                <option value="healthcare-clinical">Healthcare - Clinical</option>
-                <option value="marketing-digital">Marketing - Digital Marketing</option>
-                <option value="education-teaching">Education - Teaching</option>
+                <option value="Technology">Technology</option>
+                <option value="Financial Services">Financial Services</option>
+                <option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
+                <option value="Manufacturing & Industrial">Manufacturing & Industrial</option>
+                <option value="Retail & E-commerce">Retail & E-commerce</option>
+                <option value="Media & Entertainment">Media & Entertainment</option>
+                <option value="Education & Training">Education & Training</option>
+                <option value="Energy & Utilities">Energy & Utilities</option>
+                <option value="Professional Services">Professional Services</option>
+                <option value="Telecommunications">Telecommunications</option>
+                <option value="Transportation & Logistics">Transportation & Logistics</option>
               </select>
             </div>
 
-            {/* Target Role field */}
-            <div className="space-y-2">
-              <label className="block text-xs font-bold text-neutral-200">Target Role</label>
-              <input
-                type="text"
-                required
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                placeholder="e.g., Software Engineer, Marketing Analyst"
-                className="block w-full px-3 py-2.5 bg-black border border-neutral-800 rounded-lg text-xs text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-600 transition-colors"
-              />
-            </div>
+            {/* Specialization field (conditional) */}
+            {industry && (
+              <div className="space-y-2">
+                <label className="block text-xs font-bold text-neutral-200">Specialization</label>
+                <select
+                  value={role}
+                  required
+                  onChange={(e) => setRole(e.target.value)}
+                  className="block w-full px-3 py-2.5 bg-black border border-neutral-800 rounded-lg text-xs text-white focus:outline-none focus:border-neutral-600 transition-colors cursor-pointer"
+                >
+                  <option value="" disabled>Select a specialization</option>
+                  {industrySpecializations[industry]?.map((spec) => (
+                    <option key={spec} value={spec}>{spec}</option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             {/* Years of Experience field */}
             <div className="space-y-2">

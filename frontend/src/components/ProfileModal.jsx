@@ -13,6 +13,106 @@ import {
   Briefcase
 } from 'lucide-react';
 
+const industrySpecializations = {
+  "Technology": [
+    "Software Development",
+    "IT Services",
+    "Cybersecurity",
+    "Cloud Computing",
+    "Artificial Intelligence/Machine Learning",
+    "Data Science & Analytics",
+    "Internet & Web Services",
+    "Robotics",
+    "Quantum Computing",
+    "Blockchain & Cryptocurrency",
+    "IoT (Internet of Things)"
+  ],
+  "Financial Services": [
+    "Investment Banking",
+    "Commercial Banking",
+    "Wealth Management",
+    "Asset Management",
+    "Insurance",
+    "FinTech",
+    "Accounting & Audit",
+    "Quantitative Finance",
+    "Risk Management"
+  ],
+  "Healthcare & Life Sciences": [
+    "Clinical Medicine",
+    "Biotechnology",
+    "Pharmaceuticals",
+    "Medical Devices",
+    "Healthcare Administration",
+    "Nursing",
+    "Digital Health / HealthTech",
+    "Public Health"
+  ],
+  "Manufacturing & Industrial": [
+    "Automotive",
+    "Aerospace & Defense",
+    "Chemical Manufacturing",
+    "Industrial Automation",
+    "Supply Chain & Logistics",
+    "Quality Assurance",
+    "Process Engineering"
+  ],
+  "Retail & E-commerce": [
+    "E-commerce Operations",
+    "Retail Management",
+    "Merchandising",
+    "Digital Marketing",
+    "Customer Experience",
+    "Inventory Management"
+  ],
+  "Media & Entertainment": [
+    "Film & Television",
+    "Music Industry",
+    "Journalism & Publishing",
+    "Digital Content Creation",
+    "Game Development",
+    "Advertising & Public Relations"
+  ],
+  "Education & Training": [
+    "K-12 Education",
+    "Higher Education",
+    "EdTech (Educational Technology)",
+    "Corporate Training",
+    "Curriculum Development",
+    "Special Education"
+  ],
+  "Energy & Utilities": [
+    "Oil & Gas",
+    "Renewable Energy (Solar, Wind, etc.)",
+    "Electrical Utilities",
+    "Water & Waste Management",
+    "Nuclear Energy",
+    "Grid Automation"
+  ],
+  "Professional Services": [
+    "Management Consulting",
+    "Legal Services",
+    "Strategy & Advisory",
+    "Human Resources & Recruiting",
+    "Project Management"
+  ],
+  "Telecommunications": [
+    "Network Engineering",
+    "5G & Wireless Communications",
+    "Fiber Optics",
+    "Satellite Communications",
+    "Telecom Operations"
+  ],
+  "Transportation & Logistics": [
+    "Supply Chain Management",
+    "Freight & Cargo Shipping",
+    "Public Transportation",
+    "Fleet Management",
+    "Warehousing & Distribution",
+    "Autonomous Vehicles"
+  ]
+};
+
 export const ProfileModal = ({ isOpen, onClose }) => {
   const { user, updateUser } = useAuth();
   const [activeTab, setActiveTab] = useState('profile'); // 'profile', 'security', or 'career'
@@ -71,6 +171,57 @@ export const ProfileModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image must be less than 5MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64String = reader.result;
+      setLoading(true);
+      setError('');
+      setSuccess('');
+      try {
+        const res = await axiosInstance.put('/auth/profile', {
+          imageUrl: base64String
+        });
+        updateUser({
+          imageUrl: res.data.imageUrl
+        });
+        setSuccess('Profile picture updated successfully!');
+      } catch (err) {
+        setError(err.response?.data?.message || 'Failed to upload profile picture');
+      } finally {
+        setLoading(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = async () => {
+    setLoading(true);
+    setError('');
+    setSuccess('');
+    try {
+      const res = await axiosInstance.put('/auth/profile', {
+        imageUrl: ''
+      });
+      updateUser({
+        imageUrl: ''
+      });
+      setSuccess('Profile picture removed successfully!');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to remove profile picture');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setError('');
@@ -85,7 +236,8 @@ export const ProfileModal = ({ isOpen, onClose }) => {
 
       updateUser({
         name: res.data.name,
-        email: res.data.email
+        email: res.data.email,
+        imageUrl: res.data.imageUrl
       });
 
       setSuccess('Profile updated successfully!');
@@ -250,33 +402,77 @@ export const ProfileModal = ({ isOpen, onClose }) => {
                   </div>
                 )}
 
+                {/* Photo row */}
+                <div className="flex py-4 items-center border-b border-neutral-100">
+                  <div className="text-xs font-semibold text-neutral-500 w-1/4">Photo</div>
+                  <div className="flex-1 flex items-center gap-4">
+                    {user?.imageUrl ? (
+                      <img 
+                        src={user.imageUrl} 
+                        alt="Profile" 
+                        className="w-12 h-12 rounded-full object-cover border border-neutral-200 shadow-sm"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-lg border border-emerald-500 shadow-sm select-none uppercase">
+                        {user?.name?.charAt(0) || 'U'}
+                      </div>
+                    )}
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <label 
+                          htmlFor="avatar-upload" 
+                          className="bg-neutral-900 hover:bg-black text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all cursor-pointer select-none"
+                        >
+                          Upload Photo
+                        </label>
+                        <input 
+                          type="file" 
+                          id="avatar-upload" 
+                          accept="image/*" 
+                          onChange={handleImageChange} 
+                          className="hidden" 
+                          disabled={loading}
+                        />
+                        {user?.imageUrl && (
+                          <button
+                            type="button"
+                            onClick={handleRemoveImage}
+                            disabled={loading}
+                            className="border border-neutral-200 hover:bg-neutral-50 px-3 py-1.5 rounded-lg text-xs font-semibold text-neutral-600 transition-all cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                      <p className="text-[10px] text-neutral-400">PNG or JPG. Max size of 5MB.</p>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Profile row */}
                 <div className="flex py-4 items-center border-b border-neutral-100">
-                  <div className="text-xs font-semibold text-neutral-500 w-1/4">Profile</div>
+                  <div className="text-xs font-semibold text-neutral-500 w-1/4">Name</div>
                   <div className="flex-1 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold text-lg border border-emerald-500 shadow-sm select-none uppercase">
-                      {user?.name?.charAt(0) || 'U'}
-                    </div>
                     {isEditingName ? (
                       <form onSubmit={handleUpdateProfile} className="flex items-center gap-2 flex-1">
                         <input
                           type="text"
                           value={nameInput}
                           onChange={(e) => setNameInput(e.target.value)}
-                          className="px-2.5 py-1.5 border border-neutral-300 rounded-lg text-xs focus:outline-none focus:border-neutral-500 text-neutral-800 w-48"
+                          className="px-2.5 py-1.5 border border-neutral-300 rounded-lg text-xs focus:outline-none focus:border-neutral-500 text-neutral-800 w-48 font-sans"
                           required
                         />
                         <button
                           type="submit"
                           disabled={loading}
-                          className="bg-neutral-900 hover:bg-black text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all"
+                          className="bg-neutral-900 hover:bg-black text-white px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all cursor-pointer"
                         >
                           Save
                         </button>
                         <button
                           type="button"
                           onClick={() => setIsEditingName(false)}
-                          className="border border-neutral-200 hover:bg-neutral-50 px-3 py-1.5 rounded-lg text-xs font-semibold text-neutral-600 transition-all"
+                          className="border border-neutral-200 hover:bg-neutral-50 px-3 py-1.5 rounded-lg text-xs font-semibold text-neutral-600 transition-all cursor-pointer"
                         >
                           Cancel
                         </button>
@@ -288,7 +484,7 @@ export const ProfileModal = ({ isOpen, onClose }) => {
                           onClick={() => setIsEditingName(true)}
                           className="text-xs font-semibold text-neutral-600 hover:text-black hover:underline cursor-pointer"
                         >
-                          Update profile
+                          Update name
                         </button>
                       </div>
                     )}
@@ -393,33 +589,44 @@ export const ProfileModal = ({ isOpen, onClose }) => {
                     <label className="block text-xs font-semibold text-neutral-600">Industry</label>
                     <select
                       value={industry}
-                      onChange={(e) => setIndustry(e.target.value)}
-                      className="w-full px-3 py-2.5 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-neutral-500 text-neutral-850 bg-white"
+                      onChange={(e) => {
+                        setIndustry(e.target.value);
+                        setRole('');
+                      }}
+                      className="w-full px-3 py-2.5 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-neutral-500 text-neutral-850 bg-white cursor-pointer"
                       required
                     >
                       <option value="" disabled>Select an industry</option>
-                      <option value="tech-software-development">Tech - Software Development</option>
-                      <option value="tech-data-science">Tech - Data Science & AI</option>
-                      <option value="finance-investment-banking">Finance - Investment Banking</option>
-                      <option value="finance-accounting">Finance - Accounting</option>
-                      <option value="healthcare-administration">Healthcare - Administration</option>
-                      <option value="healthcare-clinical">Healthcare - Clinical</option>
-                      <option value="marketing-digital">Marketing - Digital Marketing</option>
-                      <option value="education-teaching">Education - Teaching</option>
+                      <option value="Technology">Technology</option>
+                      <option value="Financial Services">Financial Services</option>
+                      <option value="Healthcare & Life Sciences">Healthcare & Life Sciences</option>
+                      <option value="Manufacturing & Industrial">Manufacturing & Industrial</option>
+                      <option value="Retail & E-commerce">Retail & E-commerce</option>
+                      <option value="Media & Entertainment">Media & Entertainment</option>
+                      <option value="Education & Training">Education & Training</option>
+                      <option value="Energy & Utilities">Energy & Utilities</option>
+                      <option value="Professional Services">Professional Services</option>
+                      <option value="Telecommunications">Telecommunications</option>
+                      <option value="Transportation & Logistics">Transportation & Logistics</option>
                     </select>
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="block text-xs font-semibold text-neutral-600">Target Role</label>
-                    <input
-                      type="text"
-                      value={role}
-                      onChange={(e) => setRole(e.target.value)}
-                      placeholder="e.g., Software Engineer, Product Manager"
-                      className="w-full px-3 py-2 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-neutral-500 text-neutral-800 bg-white"
-                      required
-                    />
-                  </div>
+                  {industry && (
+                    <div className="space-y-1">
+                      <label className="block text-xs font-semibold text-neutral-600">Specialization</label>
+                      <select
+                        value={role}
+                        onChange={(e) => setRole(e.target.value)}
+                        className="w-full px-3 py-2.5 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-neutral-500 text-neutral-850 bg-white cursor-pointer"
+                        required
+                      >
+                        <option value="" disabled>Select a specialization</option>
+                        {industrySpecializations[industry]?.map((spec) => (
+                          <option key={spec} value={spec}>{spec}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
 
 
 

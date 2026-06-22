@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }) => {
         _id: res.data._id,
         name: res.data.name,
         email: res.data.email,
+        imageUrl: res.data.imageUrl,
         profileCompleted: res.data.profileCompleted,
       });
       return { success: true };
@@ -54,6 +55,7 @@ export const AuthProvider = ({ children }) => {
         _id: res.data._id,
         name: res.data.name,
         email: res.data.email,
+        imageUrl: res.data.imageUrl,
         profileCompleted: res.data.profileCompleted,
       });
       return { success: true };

@@ -46,6 +46,7 @@ export const registerUser = async (req, res, next) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        imageUrl: user.imageUrl,
         profileCompleted: user.profileCompleted,
         token: generateToken(user._id),
       });
@@ -79,6 +80,7 @@ export const loginUser = async (req, res, next) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        imageUrl: user.imageUrl,
         profileCompleted: user.profileCompleted,
         token: generateToken(user._id),
       });
@@ -111,7 +113,7 @@ export const getUserMe = async (req, res, next) => {
  * @access  Private
  */
 export const updateUserProfile = async (req, res, next) => {
-  const { name, email } = req.body;
+  const { name, email, imageUrl } = req.body;
 
   try {
     const user = await User.findById(req.user._id);
@@ -122,6 +124,7 @@ export const updateUserProfile = async (req, res, next) => {
     }
 
     if (name) user.name = name;
+    if (imageUrl !== undefined) user.imageUrl = imageUrl;
     if (email) {
       if (email.toLowerCase() !== user.email.toLowerCase()) {
         const emailExists = await User.findOne({ email });
@@ -139,6 +142,7 @@ export const updateUserProfile = async (req, res, next) => {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
+      imageUrl: updatedUser.imageUrl,
       profileCompleted: updatedUser.profileCompleted,
     });
   } catch (error) {

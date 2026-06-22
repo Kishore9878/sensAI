@@ -99,9 +99,17 @@ export const DashboardLayout = ({ children }) => {
               onClick={() => setIsProfileOpen(true)}
               className="w-full flex items-center gap-3 px-4 py-2 border border-border bg-black/30 hover:bg-black/50 hover:border-indigo-500/40 rounded-lg text-left transition-all duration-200 cursor-pointer"
             >
-              <div className="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-bold border border-indigo-500/20 text-sm uppercase">
-                {user.name.charAt(0)}
-              </div>
+              {user.imageUrl ? (
+                <img 
+                  src={user.imageUrl} 
+                  alt="Profile" 
+                  className="w-8 h-8 rounded-full object-cover border border-indigo-500/20"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-bold border border-indigo-500/20 text-sm uppercase">
+                  {user.name.charAt(0)}
+                </div>
+              )}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-white truncate">{user.name}</p>
                 <p className="text-xs text-muted-foreground truncate">{user.email}</p>

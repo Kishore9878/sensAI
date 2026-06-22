@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { 
-  Sparkles, 
-  LayoutGrid, 
-  ChevronDown, 
-  BrainCircuit, 
-  Briefcase, 
-  TrendingUp, 
-  FileText, 
-  UserPlus, 
-  FileEdit, 
-  UserCheck, 
+import {
+  Sparkles,
+  LayoutGrid,
+  ChevronDown,
+  BrainCircuit,
+  Briefcase,
+  TrendingUp,
+  FileText,
+  UserPlus,
+  FileEdit,
+  UserCheck,
   ArrowRight
 } from 'lucide-react';
 
 const LandingPage = () => {
   const { user } = useAuth();
-  
+
   // Scroll position for 3D image tilt
   const [scrollY, setScrollY] = useState(0);
 
@@ -34,7 +34,7 @@ const LandingPage = () => {
 
   // Dropdown states
   const [toolsDropdownOpen, setToolsDropdownOpen] = useState(false);
-  
+
   // FAQ state
   const [activeFaq, setActiveFaq] = useState(null);
 
@@ -77,11 +77,11 @@ const LandingPage = () => {
     <div className="min-h-screen bg-black text-foreground flex flex-col font-sans selection:bg-indigo-500/20">
       {/* Grid Pattern Overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#12121c_1px,transparent_1px),linear-gradient(to_bottom,#12121c_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none opacity-40"></div>
-      
+
       {/* Top Header Navbar */}
       <header className="sticky top-0 z-50 w-full border-b border-neutral-800/80 bg-black/80 backdrop-blur">
         <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-          
+
           {/* Logo SENSAi */}
           <Link to="/" className="font-sans tracking-tight text-white select-none text-xl font-extrabold">
             SENS<span>A</span><span className="text-blue-500 lowercase">i</span>
@@ -89,73 +89,77 @@ const LandingPage = () => {
 
           {/* Right Header Controls */}
           <div className="flex items-center gap-4">
-            {/* Industry Insights Button */}
-            <Link 
-              to={user ? "/dashboard" : "/login"}
-              className="bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all duration-200"
-            >
-              <LayoutGrid className="w-3.5 h-3.5" />
-              <span>Industry Insights</span>
-            </Link>
-
-            {/* Growth Tools Dropdown */}
-            <div className="relative">
-              <button 
-                onClick={() => setToolsDropdownOpen(!toolsDropdownOpen)}
-                className="bg-white hover:bg-neutral-100 text-black px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all duration-200"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-                <span>Growth Tools</span>
-                <ChevronDown className="w-3 h-3 text-neutral-500" />
-              </button>
-              
-              {toolsDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-neutral-950 border border-neutral-800 rounded-lg shadow-xl py-1 z-50">
-                  <Link 
-                    to="/resume" 
-                    onClick={() => setToolsDropdownOpen(false)}
-                    className="block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all"
-                  >
-                    AI Resume Builder
-                  </Link>
-                  <Link 
-                    to="/cover-letter" 
-                    onClick={() => setToolsDropdownOpen(false)}
-                    className="block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all"
-                  >
-                    AI Cover Letter
-                  </Link>
-                  <Link 
-                    to="/interview" 
-                    onClick={() => setToolsDropdownOpen(false)}
-                    className="block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all"
-                  >
-                    AI Interview Prep
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            {/* Profile Avatar / Login CTA */}
             {user ? (
-              <Link 
-                to={user.profileCompleted ? "/dashboard" : "/onboarding"}
-                className="w-8 h-8 rounded-full border border-neutral-700 bg-neutral-800 flex items-center justify-center overflow-hidden hover:opacity-85 transition-all"
-              >
-                <img 
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100&q=80"
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
-              </Link>
-            ) : (
-              <Link 
-                to="/login"
-                className="w-8 h-8 rounded-full border border-neutral-700 bg-neutral-800 flex items-center justify-center overflow-hidden hover:opacity-85 transition-all"
-              >
-                <div className="w-full h-full bg-neutral-800 text-neutral-300 flex items-center justify-center text-xs font-bold">
-                  S
+              <>
+                {/* Industry Insights Button */}
+                <Link
+                  to="/dashboard"
+                  className="bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all duration-200"
+                >
+                  <LayoutGrid className="w-3.5 h-3.5" />
+                  <span>Industry Insights</span>
+                </Link>
+
+                {/* Growth Tools Dropdown */}
+                <div className="relative">
+                  <button
+                    onClick={() => setToolsDropdownOpen(!toolsDropdownOpen)}
+                    className="bg-white hover:bg-neutral-100 text-black px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all duration-200"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>Growth Tools</span>
+                    <ChevronDown className="w-3 h-3 text-neutral-500" />
+                  </button>
+
+                  {toolsDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-neutral-950 border border-neutral-800 rounded-lg shadow-xl py-1 z-50">
+                      <Link
+                        to="/resume"
+                        onClick={() => setToolsDropdownOpen(false)}
+                        className="block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all"
+                      >
+                        AI Resume Builder
+                      </Link>
+                      <Link
+                        to="/cover-letter"
+                        onClick={() => setToolsDropdownOpen(false)}
+                        className="block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all"
+                      >
+                        AI Cover Letter
+                      </Link>
+                      <Link
+                        to="/interview"
+                        onClick={() => setToolsDropdownOpen(false)}
+                        className="block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all"
+                      >
+                        AI Interview Prep
+                      </Link>
+                    </div>
+                  )}
                 </div>
+
+                {/* Profile Avatar */}
+                <Link
+                  to={user.profileCompleted ? "/dashboard" : "/onboarding"}
+                  className="w-8 h-8 rounded-full border border-neutral-700 bg-neutral-800 flex items-center justify-center overflow-hidden hover:opacity-85 transition-all text-xs font-bold text-white uppercase select-none"
+                >
+                  {user.imageUrl ? (
+                    <img
+                      src={user.imageUrl}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span>{user.name?.charAt(0) || 'U'}</span>
+                  )}
+                </Link>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="bg-white hover:bg-neutral-200 text-black px-4 py-1.5 rounded-lg text-xs font-bold transition-all duration-200"
+              >
+                Sign In
               </Link>
             )}
           </div>
@@ -178,25 +182,19 @@ const LandingPage = () => {
             Advance your career with personalized guidance, interview prep, and AI-powered tools for job success.
           </p>
 
-          <div className="flex items-center justify-center gap-3 pt-4">
-            <Link 
+          <div className="flex items-center justify-center pt-4">
+            <Link
               to={user ? "/dashboard" : "/signup"}
-              className="bg-white hover:bg-neutral-200 text-black px-6 py-2.5 rounded-md font-bold text-sm transition-all duration-200"
+              className="bg-white hover:bg-neutral-200 text-black px-16 py-3 rounded-md font-bold text-sm transition-all duration-200 shadow-lg shadow-white/5"
             >
               Get Started
-            </Link>
-            <Link 
-              to="/login"
-              className="border border-neutral-800 bg-neutral-950/40 hover:bg-neutral-900 text-neutral-300 px-6 py-2.5 rounded-md font-bold text-sm transition-all duration-200"
-            >
-              Watch Demo
             </Link>
           </div>
         </div>
 
         {/* Banner Dashboard Image with 3D Scroll-driven Perspective Tilt - Expanded Width */}
         <div className="pt-12 w-full max-w-6xl mx-auto relative z-10" style={{ perspective: '1200px' }}>
-          <div 
+          <div
             style={{
               transform: `rotateX(${rotateXVal}deg) scale(${scaleVal})`,
               transformStyle: 'preserve-3d',
@@ -204,10 +202,10 @@ const LandingPage = () => {
             }}
             className="rounded-xl border border-neutral-800/80 bg-neutral-950/20 p-2 overflow-hidden shadow-2xl shadow-blue-500/5 backdrop-blur-md"
           >
-            <img 
-              src="/hero_banner.png" 
-              alt="SensAI Dashboard Preview" 
-              className="w-full h-auto rounded-lg"
+            <img
+              src="/hero_banner.png"
+              alt="SensAI Dashboard Preview"
+              className="w-full h-[850px] object-cover object-top rounded-lg"
             />
           </div>
         </div>

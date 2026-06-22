@@ -253,7 +253,7 @@ const ResumeBuilderPage = () => {
       let sect = `## Education\n\n`;
       edus.forEach(edu => {
         const fieldStr = edu.fieldOfStudy ? ` in ${edu.fieldOfStudy}` : '';
-        const cgpaStr = edu.cgpa ? ` | Grade: ${edu.cgpa}` : '';
+        const cgpaStr = edu.cgpa ? ` | CGPA / Percentage: ${edu.cgpa}` : '';
         sect += `### ${edu.degree}${fieldStr} - ${edu.school}\n`;
         sect += `*${edu.startDate} - ${edu.current ? 'Present' : edu.endDate}${cgpaStr}*\n\n`;
         if (edu.description) {
@@ -927,11 +927,11 @@ const ResumeBuilderPage = () => {
       return;
     }
     if (!eduForm.degree.trim()) {
-      setFormError('Degree is required.');
+      setFormError('Qualification is required.');
       return;
     }
     if (!eduForm.fieldOfStudy.trim()) {
-      setFormError('Field of Study is required.');
+      setFormError('Specialization / Stream is required.');
       return;
     }
     if (!eduForm.cgpa.trim()) {
@@ -939,11 +939,11 @@ const ResumeBuilderPage = () => {
       return;
     }
     if (!eduForm.startDate) {
-      setFormError('Start Date/Year is required.');
+      setFormError('Start Year is required.');
       return;
     }
     if (!eduForm.endDate) {
-      setFormError('End Date/Year is required.');
+      setFormError('End Year is required.');
       return;
     }
 
@@ -1166,7 +1166,7 @@ const ResumeBuilderPage = () => {
       <h2>Education</h2>
       ${edus.map(edu => {
         const fieldStr = edu.fieldOfStudy ? ` in ${edu.fieldOfStudy}` : '';
-        const cgpaStr = edu.cgpa ? ` | CGPA: ${edu.cgpa}` : '';
+        const cgpaStr = edu.cgpa ? ` | CGPA / Percentage: ${edu.cgpa}` : '';
         return `
           <div class="entry">
             <div class="entry-header">
@@ -1428,13 +1428,17 @@ const ResumeBuilderPage = () => {
             <div className="relative">
               <button
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                className="w-8 h-8 rounded-full border border-neutral-700 bg-neutral-800 flex items-center justify-center overflow-hidden hover:border-neutral-500 transition-all duration-200"
+                className="w-8 h-8 rounded-full border border-neutral-700 bg-neutral-800 flex items-center justify-center overflow-hidden hover:border-neutral-500 transition-all duration-200 text-xs font-bold text-white uppercase select-none"
               >
-                <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100&q=80"
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
+                {user?.imageUrl ? (
+                  <img
+                    src={user.imageUrl}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span>{user?.name?.charAt(0) || 'U'}</span>
+                )}
               </button>
 
               {profileDropdownOpen && (
@@ -1913,7 +1917,7 @@ const ResumeBuilderPage = () => {
                   <div key={idx} className="p-4 rounded-lg border border-neutral-850 bg-black/30 flex items-start justify-between">
                     <div className="space-y-1 text-left">
                       <div className="text-xs font-bold text-white">{edu.degree} {edu.fieldOfStudy ? `in ${edu.fieldOfStudy}` : ''}</div>
-                      <div className="text-[10px] text-neutral-400 font-semibold">{edu.school} • Grade: {edu.cgpa} • {edu.startDate} - {edu.endDate}</div>
+                      <div className="text-[10px] text-neutral-400 font-semibold">{edu.school} • CGPA / Percentage: {edu.cgpa} • {edu.startDate} - {edu.endDate}</div>
                       {edu.description && (
                         <div className="text-[11px] text-neutral-500 leading-relaxed max-w-2xl whitespace-pre-wrap mt-1">{edu.description}</div>
                       )}
@@ -1968,17 +1972,17 @@ const ResumeBuilderPage = () => {
                         type="text"
                         value={eduForm.school}
                         onChange={e => setEduForm({ ...eduForm, school: e.target.value })}
-                        placeholder="e.g. Stanford University"
+                        placeholder="e.g. ABC Public School, Narayana Junior College, NIT Raipur"
                         className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none focus:border-neutral-700"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Degree *</label>
+                      <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Qualification *</label>
                       <input
                         type="text"
                         value={eduForm.degree}
                         onChange={e => setEduForm({ ...eduForm, degree: e.target.value })}
-                        placeholder="e.g. Bachelor of Science"
+                        placeholder="e.g. Class 10, Class 12, B.Tech"
                         className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none focus:border-neutral-700"
                       />
                     </div>
@@ -1986,12 +1990,12 @@ const ResumeBuilderPage = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Field of Study *</label>
+                      <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Specialization / Stream *</label>
                       <input
                         type="text"
                         value={eduForm.fieldOfStudy}
                         onChange={e => setEduForm({ ...eduForm, fieldOfStudy: e.target.value })}
-                        placeholder="e.g. Computer Science"
+                        placeholder="e.g. General, MPC, Computer Science"
                         className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none focus:border-neutral-700"
                       />
                     </div>
@@ -2001,7 +2005,7 @@ const ResumeBuilderPage = () => {
                         type="text"
                         value={eduForm.cgpa}
                         onChange={e => setEduForm({ ...eduForm, cgpa: e.target.value })}
-                        placeholder="e.g. 3.9/4.0 or 95%"
+                        placeholder="e.g. 95% or 8.59 CGPA"
                         className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none focus:border-neutral-700"
                       />
                     </div>
@@ -2014,7 +2018,7 @@ const ResumeBuilderPage = () => {
                         type="text"
                         value={eduForm.startDate}
                         onChange={e => setEduForm({ ...eduForm, startDate: e.target.value })}
-                        placeholder="e.g. 2020"
+                        placeholder="e.g. 2019"
                         className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none focus:border-neutral-700"
                       />
                     </div>
@@ -2024,18 +2028,18 @@ const ResumeBuilderPage = () => {
                         type="text"
                         value={eduForm.endDate}
                         onChange={e => setEduForm({ ...eduForm, endDate: e.target.value })}
-                        placeholder="e.g. 2024 or Present"
+                        placeholder="e.g. 2020"
                         className="w-full bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none focus:border-neutral-700"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Description / Honors (Optional)</label>
+                    <label className="block text-[10px] text-neutral-500 font-bold uppercase tracking-wider mb-1">Description (Optional)</label>
                     <textarea
                       value={eduForm.description || ''}
                       onChange={e => setEduForm({ ...eduForm, description: e.target.value })}
-                      placeholder="e.g. Graduated with Honors, GPA 3.9, Dean's List..."
+                      placeholder="e.g. Completed school with high honors..."
                       className="w-full h-24 bg-[#09090b] border border-neutral-800 rounded-lg p-2.5 text-xs text-white placeholder-neutral-700 focus:outline-none focus:border-neutral-700 resize-none"
                     />
                   </div>
@@ -2482,6 +2486,7 @@ const ResumeBuilderPage = () => {
           </div>
         </div>
       </footer>
+      <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
     </div>
   );
 };
@@ -2857,7 +2862,7 @@ const ResumePreview = ({
       <div className="space-y-2">
         {educations.map((edu, idx) => {
           const fieldStr = edu.fieldOfStudy ? ` in ${edu.fieldOfStudy}` : '';
-          const cgpaStr = edu.cgpa ? ` | CGPA: ${edu.cgpa}` : '';
+          const cgpaStr = edu.cgpa ? ` | CGPA / Percentage: ${edu.cgpa}` : '';
           return (
             <div key={idx} className="text-[12.5px]">
               {isEditable ? (
@@ -2866,7 +2871,7 @@ const ResumePreview = ({
                     <input
                       type="text"
                       value={edu.school || ''}
-                      placeholder="School"
+                      placeholder="Institution Name"
                       onChange={(e) => onUpdateField('educations', e.target.value, idx, 'school')}
                       className="w-2/3 font-bold text-black bg-transparent border border-dashed border-transparent hover:border-neutral-300 focus:border-indigo-500 focus:bg-neutral-50/50 rounded outline-none px-1 transition-all"
                     />
@@ -2895,28 +2900,28 @@ const ResumePreview = ({
                     <input
                       type="text"
                       value={edu.degree || ''}
-                      placeholder="Degree"
+                      placeholder="Qualification"
                       onChange={(e) => onUpdateField('educations', e.target.value, idx, 'degree')}
                       className="w-1/3 text-neutral-600 bg-transparent border border-dashed border-transparent hover:border-neutral-300 focus:border-indigo-500 focus:bg-neutral-50/50 rounded outline-none px-1 transition-all"
                     />
                     <input
                       type="text"
                       value={edu.fieldOfStudy || ''}
-                      placeholder="Field of Study"
+                      placeholder="Specialization / Stream"
                       onChange={(e) => onUpdateField('educations', e.target.value, idx, 'fieldOfStudy')}
                       className="w-1/3 text-neutral-600 bg-transparent border border-dashed border-transparent hover:border-neutral-300 focus:border-indigo-500 focus:bg-neutral-50/50 rounded outline-none px-1 transition-all"
                     />
                     <input
                       type="text"
                       value={edu.cgpa || ''}
-                      placeholder="CGPA / Grade"
+                      placeholder="CGPA / Percentage"
                       onChange={(e) => onUpdateField('educations', e.target.value, idx, 'cgpa')}
                       className="w-1/3 text-neutral-650 bg-transparent border border-dashed border-transparent hover:border-neutral-300 focus:border-indigo-500 focus:bg-neutral-50/50 rounded outline-none px-1 text-right transition-all"
                     />
                   </div>
                   <textarea
                     value={edu.description || ''}
-                    placeholder="Education details..."
+                    placeholder="Description (Optional)"
                     onChange={(e) => onUpdateField('educations', e.target.value, idx, 'description')}
                     rows={edu.description ? edu.description.split('\n').length + 1 : 2}
                     className="w-full text-[12px] text-neutral-800 leading-normal bg-transparent border border-dashed border-transparent hover:border-neutral-300 focus:border-indigo-500 focus:bg-neutral-50/50 rounded p-1 outline-none resize-none transition-all"
@@ -3034,7 +3039,6 @@ const ResumePreview = ({
           </>
         )}
       </div>
-      <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
     </div>
   );
 };
