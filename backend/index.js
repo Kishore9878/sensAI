@@ -31,6 +31,7 @@ import profileRoutes from './routes/profileRoutes.js';
 import resumeRoutes from './routes/resumeRoutes.js';
 import coverLetterRoutes from './routes/coverLetterRoutes.js';
 import interviewRoutes from './routes/interviewRoutes.js';
+import mockInterviewRoutes from './routes/mockInterviewRoutes.js';
 import insightRoutes from './routes/insightRoutes.js';
 
 app.use('/api/auth', authRoutes);
@@ -38,6 +39,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/resume', resumeRoutes);
 app.use('/api/coverletter', coverLetterRoutes);
 app.use('/api/interview', interviewRoutes);
+app.use('/api/mock-interview', mockInterviewRoutes);
 app.use('/api/insights', insightRoutes);
 
 // Base Route

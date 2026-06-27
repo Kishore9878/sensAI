@@ -13,6 +13,11 @@ import ResumeBuilderPage from './pages/ResumeBuilderPage';
 import CoverLetterPage from './pages/CoverLetterPage';
 import InterviewPrepPage from './pages/InterviewPrepPage';
 import InterviewTypeSelectionPage from './pages/InterviewTypeSelectionPage';
+import InterviewModeSelectionPage from './pages/InterviewModeSelectionPage';
+import MockInterviewTypeSelectionPage from './pages/MockInterviewTypeSelectionPage';
+import MockInterviewPrepPage from './pages/MockInterviewPrepPage';
+import ResumeUploadPage from './pages/ResumeUploadPage';
+import SubjectSelectionPage from './pages/SubjectSelectionPage';
 
 function App() {
   return (
@@ -38,8 +43,13 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/resume" element={<ResumeBuilderPage />} />
             <Route path="/cover-letter" element={<CoverLetterPage />} />
-            <Route path="/interview" element={<InterviewTypeSelectionPage />} />
-            <Route path="/interview/prep" element={<InterviewPrepPage />} />
+            <Route path="/interview" element={<InterviewModeSelectionPage />} />
+            <Route path="/interview/practice" element={<InterviewTypeSelectionPage />} />
+            <Route path="/interview/practice/prep" element={<InterviewPrepPage />} />
+            <Route path="/interview/mock" element={<MockInterviewTypeSelectionPage />} />
+            <Route path="/interview/mock/prep" element={<MockInterviewPrepPage />} />
+            <Route path="/interview/upload" element={<ResumeUploadPage />} />
+            <Route path="/interview/subject" element={<SubjectSelectionPage />} />
           </Route>
 
           {/* Fallback route */}

@@ -8,7 +8,7 @@ import { generateAIInterviewQuestions, evaluateAIInterviewAnswers, generateAIImp
  * @access  Private
  */
 export const startInterviewSession = async (req, res, next) => {
-  const { category } = req.body; // e.g. "Technical" or "Behavioral"
+  const { category, subject, resumeData } = req.body; // e.g. "Technical" or "Behavioral"
 
   try {
     if (!category) {
@@ -28,7 +28,9 @@ export const startInterviewSession = async (req, res, next) => {
       profile.industry,
       profile.role || profile.careerGoals || 'Professional Developer',
       profile.skills || [],
-      category
+      category,
+      subject,
+      resumeData
     );
 
     // Create session in database
@@ -36,6 +38,8 @@ export const startInterviewSession = async (req, res, next) => {
       userId: req.user._id,
       quizScore: 0,
       category,
+      subject: subject || '',
+      resumeData: resumeData || null,
       questions: aiQuestions.map(q => ({
         question: q.question,
         options: q.options || [],

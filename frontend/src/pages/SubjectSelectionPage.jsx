@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { 
   Sparkles, 
@@ -9,18 +9,20 @@ import {
   LogOut, 
   FileText,
   Code,
-  MessageSquare,
-  Layers,
-  HelpCircle,
-  ChevronRight,
+  Database,
+  Cpu,
+  Globe,
   ArrowLeft,
-  GraduationCap
+  ChevronRight
 } from 'lucide-react';
 import { ProfileModal } from '../components/ProfileModal';
 
-const InterviewTypeSelectionPage = () => {
+const SubjectSelectionPage = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const [searchParams] = useSearchParams();
+  const mode = searchParams.get('mode') || 'practice'; // 'practice' or 'mock'
+
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [toolsDropdownOpen, setToolsDropdownOpen] = useState(false);
@@ -30,57 +32,43 @@ const InterviewTypeSelectionPage = () => {
     navigate('/');
   };
 
-  const handleSelect = (typeId) => {
-    if (typeId === 'resume') {
-      navigate('/interview/upload?mode=practice');
-    } else if (typeId === 'core_subjects') {
-      navigate('/interview/subject?mode=practice');
-    } else {
-      navigate(`/interview/practice/prep?type=${typeId}`);
-    }
-  };
-
-  const interviewTypes = [
+  const subjects = [
     {
-      id: 'technical',
-      name: 'Technical Interview',
-      description: 'Evaluate technical concepts, system architecture, programming paradigms, and debugging capabilities tailored directly to your target role and key skills.',
+      id: 'oop',
+      name: 'Object Oriented Programming',
+      description: 'Polymorphism, Inheritance, Encapsulation, Abstraction, Classes & Objects, Interfaces, and Design Patterns.',
       icon: <Code className="w-5 h-5 text-indigo-400 group-hover:text-indigo-300 transition-colors" />
     },
     {
-      id: 'behavioral',
-      name: 'Behavioral Interview',
-      description: 'Practice scenarios testing leadership, teamwork, ownership, communication, and conflict resolution using professional STAR-style interview questions.',
-      icon: <MessageSquare className="w-5 h-5 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
+      id: 'dbms',
+      name: 'Database Management System',
+      description: 'ACID properties, Database Normalization (1NF, 2NF, 3NF, BCNF), Indexing, Joins, Transactions, and Query Optimization.',
+      icon: <Database className="w-5 h-5 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
     },
     {
-      id: 'system_design',
-      name: 'System Design Interview',
-      description: 'Assess your design capability for scalable distributed systems, databases, caching layers, load balancing, performance optimization, and security concerns.',
-      icon: <Layers className="w-5 h-5 text-amber-400 group-hover:text-amber-300 transition-colors" />
+      id: 'os',
+      name: 'Operating System',
+      description: 'Process vs Thread, Cpu Scheduling, Deadlocks, Paging, Segmentation, Virtual Memory, and Semaphores.',
+      icon: <Cpu className="w-5 h-5 text-amber-400 group-hover:text-amber-300 transition-colors" />
     },
     {
-      id: 'hr',
-      name: 'HR Interview',
-      description: 'Prepare for HR assessments evaluating organizational fit, communication styles, situational integrity, values alignment, and career motivations.',
-      icon: <User className="w-5 h-5 text-pink-400 group-hover:text-pink-300 transition-colors" />
-    },
-    {
-      id: 'resume',
-      name: 'Resume-Based Interview',
-      description: 'Engage in an interview customized entirely to your uploaded resume, detailing your specific projects, technologies used, experiences, and achievements.',
-      icon: <FileText className="w-5 h-5 text-sky-400 group-hover:text-sky-300 transition-colors" />
-    },
-    {
-      id: 'core_subjects',
-      name: 'Core Subjects Interview',
-      description: 'Test your fundamental knowledge of computer science core subjects: Object Oriented Programming, DBMS, Operating Systems, and Computer Networks.',
-      icon: <GraduationCap className="w-5 h-5 text-purple-400 group-hover:text-purple-300 transition-colors" />
+      id: 'cn',
+      name: 'Computer Networks',
+      description: 'OSI Model, TCP/IP Model, TCP three-way handshake, UDP, DNS, HTTP/HTTPS, Routing Protocols, and Subnetting.',
+      icon: <Globe className="w-5 h-5 text-sky-400 group-hover:text-sky-300 transition-colors" />
     }
   ];
 
+  const handleSelect = (subjectName) => {
+    const destination = mode === 'mock' 
+      ? `/interview/mock/prep?type=core_subjects` 
+      : `/interview/practice/prep?type=core_subjects`;
+    
+    navigate(destination, { state: { type: 'core_subjects', subject: subjectName } });
+  };
+
   return (
-    <div className="min-h-screen bg-black text-foreground flex flex-col font-sans selection:bg-indigo-500/20">
+    <div className="min-h-screen bg-black text-foreground flex flex-col font-sans selection:bg-indigo-500/20 relative">
       
       {/* Grid Pattern Background Overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#12121c_1px,transparent_1px),linear-gradient(to_bottom,#12121c_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none opacity-40"></div>
@@ -165,7 +153,7 @@ const InterviewTypeSelectionPage = () => {
                   {user && (
                     <div className="px-4 py-2 border-b border-neutral-900">
                       <p className="text-xs font-bold text-white truncate">{user.name}</p>
-                      <p className="text-[10px] text-neutral-500 truncate">{user.email}</p>
+                      <p className="text-[10px] text-neutral-550 truncate">{user.email}</p>
                     </div>
                   )}
                   <button 
@@ -191,51 +179,51 @@ const InterviewTypeSelectionPage = () => {
       </header>
 
       {/* Main Container */}
-      <main className="flex-1 container mx-auto px-6 py-10 relative z-10 space-y-6 max-w-5xl">
+      <main className="flex-1 container mx-auto px-6 py-10 relative z-10 space-y-6 max-w-7xl">
         
         {/* Back Link */}
         <div>
           <Link
-            to="/interview"
+            to={mode === 'mock' ? '/interview/mock' : '/interview/practice'}
             className="inline-flex items-center gap-1.5 text-xs text-neutral-450 hover:text-white font-semibold transition-colors duration-200"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Mode Selection</span>
+            <span>Back to Categories</span>
           </Link>
         </div>
 
         {/* Header Title */}
         <div className="space-y-1">
-          <h1 className="text-4xl font-extrabold text-white tracking-tight">Select Interview Type</h1>
-          <p className="text-xs text-neutral-500 max-w-2xl">
-            Choose the specific interview assessment style you want to practice. The AI interviewer will generate questions and feedback matching your selection.
+          <h1 className="text-4xl font-extrabold text-white tracking-tight">Select Core Subject</h1>
+          <p className="text-xs text-neutral-550 max-w-2xl font-medium">
+            Select a computer science subject. The AI will customize a specialized suite of {mode === 'mock' ? 'descriptive interview questions' : 'MCQ practice quizzes'} based on core engineering theories.
           </p>
         </div>
 
         {/* 4 Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-          {interviewTypes.map((type) => (
+          {subjects.map((sub) => (
             <button
-              key={type.id}
-              onClick={() => handleSelect(type.id)}
-              className="p-6 rounded-xl border border-neutral-900 bg-[#09090b] hover:border-neutral-800 hover:bg-[#0c0c0f] active:scale-[0.99] text-left transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-neutral-700 flex flex-col justify-between h-56 relative overflow-hidden group cursor-pointer"
+              key={sub.id}
+              onClick={() => handleSelect(sub.name)}
+              className="p-6 rounded-xl border border-neutral-900 bg-[#09090b] hover:border-neutral-800 hover:bg-[#0c0c0f] active:scale-[0.99] text-left transition-all duration-250 focus:outline-none focus:ring-1 focus:ring-neutral-700 flex flex-col justify-between h-56 relative overflow-hidden group cursor-pointer"
             >
               <div className="space-y-4">
                 <div className="w-10 h-10 rounded-lg bg-neutral-950 border border-neutral-850 flex items-center justify-center text-neutral-450 group-hover:text-white transition-colors duration-200">
-                  {type.icon}
+                  {sub.icon}
                 </div>
                 <div className="space-y-1.5">
                   <h3 className="text-sm font-bold text-white group-hover:text-indigo-400 transition-colors duration-200">
-                    {type.name}
+                    {sub.name}
                   </h3>
-                  <p className="text-xs text-neutral-400 leading-relaxed">
-                    {type.description}
+                  <p className="text-xs text-neutral-400 leading-relaxed font-normal">
+                    {sub.description}
                   </p>
                 </div>
               </div>
               
               <div className="flex items-center gap-1 text-[10px] font-semibold text-neutral-500 group-hover:text-neutral-300 transition-colors duration-200">
-                <span>Start Practice</span>
+                <span>Start Session</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </div>
             </button>
@@ -251,4 +239,4 @@ const InterviewTypeSelectionPage = () => {
   );
 };
 
-export default InterviewTypeSelectionPage;
+export default SubjectSelectionPage;

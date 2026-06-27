@@ -500,8 +500,27 @@ export const generateAIIndustryInsights = async (industry) => {
 /**
  * Generate Interview Questions
  */
-export const generateAIInterviewQuestions = async (industry, role, skills = [], interviewType = 'technical') => {
+export const generateAIInterviewQuestions = async (industry, role, skills = [], interviewType = 'technical', subject = '', resumeData = null) => {
   const getMock = () => {
+    const type = (interviewType || '').toLowerCase();
+    if (type === 'hr') {
+      return [
+        { question: "Why do you want to join our company?", options: ["Opportunities for growth and skill alignment", "Higher salary package only", "It is closer to my house", "I just need a job"], answer: "Opportunities for growth and skill alignment", feedback: "Focusing on alignment and professional growth is a standard, positive HR response." },
+        { question: "What is your greatest strength?", options: ["Continuous learning and adaptability", "Completing tasks quickly without checking", "Working isolated from teams", "Avoiding difficult challenges"], answer: "Continuous learning and adaptability", feedback: "Continuous learning and flexibility show a high potential for long-term value." },
+        { question: "How do you handle conflict in a team?", options: ["Open constructive communication and compromise", "Ignoring it entirely", "Escalating directly to HR immediately", "Sticking to my opinion until others yield"], answer: "Open constructive communication and compromise", feedback: "Active listening and compromise are key for maintaining team collaboration." }
+      ];
+    }
+    if (type === 'core_subjects') {
+      return [
+        { question: "Which of the following is NOT an ACID property in Database Management Systems?", options: ["Atomicity", "Consistency", "Isolation", "Concurrency"], answer: "Concurrency", feedback: "ACID properties are Atomicity, Consistency, Isolation, and Durability." },
+        { question: "What is the main difference between a process and a thread?", options: ["Processes share memory, threads do not", "Threads share memory and resources of their parent process", "Processes are faster to create than threads", "Threads do not run concurrently"], answer: "Threads share memory and resources of their parent process", feedback: "Threads execute concurrently within the same address space of the parent process." }
+      ];
+    }
+    if (type === 'resume') {
+      return [
+        { question: "What is the primary benefit of using a document store database like MongoDB over relational databases?", options: ["Flexible schema matching dynamic objects", "Strict transaction isolation", "Lower memory consumption", "Pre-defined table relationships"], answer: "Flexible schema matching dynamic objects", feedback: "Document stores offer schema flexibility for quick iterative development." }
+      ];
+    }
     const ind = (industry || '').toLowerCase();
     let pool = techPool;
     if (ind.includes('tech') || ind.includes('software') || ind.includes('data') || ind.includes('ai') || ind.includes('developer')) {
@@ -562,14 +581,36 @@ export const generateAIInterviewQuestions = async (industry, role, skills = [], 
         
         Adapt the complexity of the questions to be appropriate for the target role "${role}" and the industry "${industry}".
       `;
-    } else if (type === 'general') {
+    } else if (type === 'hr') {
       typeSpecificInstructions = `
-        The interview type is GENERAL.
-        Generate broad career-oriented and general interview questions:
-        - Tell me about yourself / Walk me through your resume
-        - Career goals & motivation (Why this role? Why this company?)
-        - Strengths and weaknesses / Professional achievements
-        - General industry awareness
+        The interview type is HR.
+        Generate HR-oriented and career placement questions:
+        - Tell me about yourself / career motivation
+        - Why should we hire you? Why this company?
+        - Core strengths and weaknesses, professional goals, and workplace values
+        - Handling difficult work challenges, leadership, and conflicts
+      `;
+    } else if (type === 'core_subjects') {
+      typeSpecificInstructions = `
+        The interview type is CORE SUBJECTS.
+        The selected subject is: "${subject || 'Operating System'}".
+        Generate high-quality multiple choice questions strictly based on the subject: "${subject || 'Operating System'}".
+        Cover critical concepts:
+        - If OOP: Polymorphism, Inheritance, Encapsulation, Abstraction
+        - If DBMS: ACID properties, Normalization, indexing, transactions
+        - If OS: Process vs Thread, Scheduling algorithms, Paging, Virtual memory
+        - If Computer Networks: TCP/IP model, UDP, three-way handshake, DNS, HTTP/S
+      `;
+    } else if (type === 'resume') {
+      const resumeStr = resumeData ? JSON.stringify(resumeData) : 'No resume details provided';
+      typeSpecificInstructions = `
+        The interview type is RESUME-BASED.
+        Extracted Resume Data:
+        ${resumeStr}
+        
+        Generate multiple choice questions DIRECTLY sourced from the candidate's resume:
+        - Ask questions testing concepts related to the projects, internships, achievements, and tools listed.
+        - Questions must test technical details of technologies specified in their projects/internships (e.g. "In your project, which DB did you use..." or checking concepts around their listed tech stack).
       `;
     } else {
       typeSpecificInstructions = `

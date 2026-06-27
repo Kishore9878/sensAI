@@ -50,6 +50,14 @@ const interviewSessionSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    subject: {
+      type: String,
+      default: '',
+    },
+    resumeData: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
+    },
   },
   {
     timestamps: true,

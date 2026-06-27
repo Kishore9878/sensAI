@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import axiosInstance from '../utils/axiosInstance';
 import { 
@@ -31,9 +31,13 @@ const InterviewPrepPage = () => {
     navigate('/');
   };
 
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const initialType = searchParams.get('type') || sessionStorage.getItem('sensai_interview_type') || 'technical';
   const [interviewType, setInterviewType] = useState(initialType);
+  
+  const [subject, setSubject] = useState(location.state?.subject || sessionStorage.getItem('sensai_interview_subject') || '');
+  const [resumeData, setResumeData] = useState(location.state?.resumeData || (sessionStorage.getItem('sensai_interview_resumedata') ? JSON.parse(sessionStorage.getItem('sensai_interview_resumedata')) : null));
 
   useEffect(() => {
     const typeParam = searchParams.get('type');
@@ -42,6 +46,17 @@ const InterviewPrepPage = () => {
       setInterviewType(typeParam);
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    if (location.state?.subject) {
+      sessionStorage.setItem('sensai_interview_subject', location.state.subject);
+      setSubject(location.state.subject);
+    }
+    if (location.state?.resumeData) {
+      sessionStorage.setItem('sensai_interview_resumedata', JSON.stringify(location.state.resumeData));
+      setResumeData(location.state.resumeData);
+    }
+  }, [location.state]);
 
   // Session States
   const [sessions, setSessions] = useState([]);
@@ -89,7 +104,13 @@ const InterviewPrepPage = () => {
     setActionLoading(true);
     setError('');
     try {
-      const res = await axiosInstance.post('/interview/start', { category: interviewType });
+      const payload = { category: interviewType };
+      if (interviewType === 'core_subjects') {
+        payload.subject = subject;
+      } else if (interviewType === 'resume') {
+        payload.resumeData = resumeData;
+      }
+      const res = await axiosInstance.post('/interview/start', payload);
       setCurrentSession(res.data);
       setAnswers({});
       setCurrentQuestionIndex(0);
@@ -463,7 +484,7 @@ const InterviewPrepPage = () => {
             {/* Header Title */}
             <div className="space-y-2">
               <Link
-                to="/interview"
+                to="/interview/practice"
                 className="inline-flex items-center gap-1.5 text-xs text-neutral-450 hover:text-white font-semibold transition-colors duration-200"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />

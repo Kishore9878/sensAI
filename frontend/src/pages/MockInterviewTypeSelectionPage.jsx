@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { ProfileModal } from '../components/ProfileModal';
 
-const InterviewTypeSelectionPage = () => {
+const MockInterviewTypeSelectionPage = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -32,11 +32,11 @@ const InterviewTypeSelectionPage = () => {
 
   const handleSelect = (typeId) => {
     if (typeId === 'resume') {
-      navigate('/interview/upload?mode=practice');
+      navigate('/interview/upload?mode=mock');
     } else if (typeId === 'core_subjects') {
-      navigate('/interview/subject?mode=practice');
+      navigate('/interview/subject?mode=mock');
     } else {
-      navigate(`/interview/practice/prep?type=${typeId}`);
+      navigate(`/interview/mock/prep?type=${typeId}`);
     }
   };
 
@@ -80,7 +80,7 @@ const InterviewTypeSelectionPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-foreground flex flex-col font-sans selection:bg-indigo-500/20">
+    <div className="min-h-screen bg-black text-foreground flex flex-col font-sans selection:bg-indigo-500/20 relative">
       
       {/* Grid Pattern Background Overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#12121c_1px,transparent_1px),linear-gradient(to_bottom,#12121c_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none opacity-40"></div>
@@ -191,7 +191,7 @@ const InterviewTypeSelectionPage = () => {
       </header>
 
       {/* Main Container */}
-      <main className="flex-1 container mx-auto px-6 py-10 relative z-10 space-y-6 max-w-5xl">
+      <main className="flex-1 container mx-auto px-6 py-10 relative z-10 space-y-6 max-w-7xl">
         
         {/* Back Link */}
         <div>
@@ -206,7 +206,7 @@ const InterviewTypeSelectionPage = () => {
 
         {/* Header Title */}
         <div className="space-y-1">
-          <h1 className="text-4xl font-extrabold text-white tracking-tight">Select Interview Type</h1>
+          <h1 className="text-4xl font-extrabold text-white tracking-tight">Select Mock Interview Type</h1>
           <p className="text-xs text-neutral-500 max-w-2xl">
             Choose the specific interview assessment style you want to practice. The AI interviewer will generate questions and feedback matching your selection.
           </p>
@@ -235,7 +235,7 @@ const InterviewTypeSelectionPage = () => {
               </div>
               
               <div className="flex items-center gap-1 text-[10px] font-semibold text-neutral-500 group-hover:text-neutral-300 transition-colors duration-200">
-                <span>Start Practice</span>
+                <span>Start Mock Interview</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </div>
             </button>
@@ -251,4 +251,4 @@ const InterviewTypeSelectionPage = () => {
   );
 };
 
-export default InterviewTypeSelectionPage;
+export default MockInterviewTypeSelectionPage;

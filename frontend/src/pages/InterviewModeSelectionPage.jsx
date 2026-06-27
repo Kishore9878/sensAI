@@ -8,17 +8,14 @@ import {
   User, 
   LogOut, 
   FileText,
-  Code,
-  MessageSquare,
-  Layers,
   HelpCircle,
-  ChevronRight,
-  ArrowLeft,
+  Mic,
+  ArrowRight,
   GraduationCap
 } from 'lucide-react';
 import { ProfileModal } from '../components/ProfileModal';
 
-const InterviewTypeSelectionPage = () => {
+const InterviewModeSelectionPage = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -30,57 +27,8 @@ const InterviewTypeSelectionPage = () => {
     navigate('/');
   };
 
-  const handleSelect = (typeId) => {
-    if (typeId === 'resume') {
-      navigate('/interview/upload?mode=practice');
-    } else if (typeId === 'core_subjects') {
-      navigate('/interview/subject?mode=practice');
-    } else {
-      navigate(`/interview/practice/prep?type=${typeId}`);
-    }
-  };
-
-  const interviewTypes = [
-    {
-      id: 'technical',
-      name: 'Technical Interview',
-      description: 'Evaluate technical concepts, system architecture, programming paradigms, and debugging capabilities tailored directly to your target role and key skills.',
-      icon: <Code className="w-5 h-5 text-indigo-400 group-hover:text-indigo-300 transition-colors" />
-    },
-    {
-      id: 'behavioral',
-      name: 'Behavioral Interview',
-      description: 'Practice scenarios testing leadership, teamwork, ownership, communication, and conflict resolution using professional STAR-style interview questions.',
-      icon: <MessageSquare className="w-5 h-5 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
-    },
-    {
-      id: 'system_design',
-      name: 'System Design Interview',
-      description: 'Assess your design capability for scalable distributed systems, databases, caching layers, load balancing, performance optimization, and security concerns.',
-      icon: <Layers className="w-5 h-5 text-amber-400 group-hover:text-amber-300 transition-colors" />
-    },
-    {
-      id: 'hr',
-      name: 'HR Interview',
-      description: 'Prepare for HR assessments evaluating organizational fit, communication styles, situational integrity, values alignment, and career motivations.',
-      icon: <User className="w-5 h-5 text-pink-400 group-hover:text-pink-300 transition-colors" />
-    },
-    {
-      id: 'resume',
-      name: 'Resume-Based Interview',
-      description: 'Engage in an interview customized entirely to your uploaded resume, detailing your specific projects, technologies used, experiences, and achievements.',
-      icon: <FileText className="w-5 h-5 text-sky-400 group-hover:text-sky-300 transition-colors" />
-    },
-    {
-      id: 'core_subjects',
-      name: 'Core Subjects Interview',
-      description: 'Test your fundamental knowledge of computer science core subjects: Object Oriented Programming, DBMS, Operating Systems, and Computer Networks.',
-      icon: <GraduationCap className="w-5 h-5 text-purple-400 group-hover:text-purple-300 transition-colors" />
-    }
-  ];
-
   return (
-    <div className="min-h-screen bg-black text-foreground flex flex-col font-sans selection:bg-indigo-500/20">
+    <div className="min-h-screen bg-black text-foreground flex flex-col font-sans selection:bg-indigo-500/20 relative">
       
       {/* Grid Pattern Background Overlay */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#12121c_1px,transparent_1px),linear-gradient(to_bottom,#12121c_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none opacity-40"></div>
@@ -191,55 +139,107 @@ const InterviewTypeSelectionPage = () => {
       </header>
 
       {/* Main Container */}
-      <main className="flex-1 container mx-auto px-6 py-10 relative z-10 space-y-6 max-w-5xl">
+      <main className="flex-1 container mx-auto px-6 py-12 relative z-10 flex flex-col justify-center max-w-7xl">
         
-        {/* Back Link */}
-        <div>
-          <Link
-            to="/interview"
-            className="inline-flex items-center gap-1.5 text-xs text-neutral-450 hover:text-white font-semibold transition-colors duration-200"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Mode Selection</span>
-          </Link>
-        </div>
-
         {/* Header Title */}
-        <div className="space-y-1">
-          <h1 className="text-4xl font-extrabold text-white tracking-tight">Select Interview Type</h1>
-          <p className="text-xs text-neutral-500 max-w-2xl">
-            Choose the specific interview assessment style you want to practice. The AI interviewer will generate questions and feedback matching your selection.
+        <div className="text-center space-y-3 mb-12">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+            Interview Prep Mode
+          </h1>
+          <p className="text-sm text-neutral-550 max-w-2xl mx-auto leading-relaxed">
+            Choose your preferred training ground. Build your fundamental knowledge with MCQ quizzes or experience a full-length, interactive AI mock interview.
           </p>
         </div>
 
-        {/* 4 Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-          {interviewTypes.map((type) => (
-            <button
-              key={type.id}
-              onClick={() => handleSelect(type.id)}
-              className="p-6 rounded-xl border border-neutral-900 bg-[#09090b] hover:border-neutral-800 hover:bg-[#0c0c0f] active:scale-[0.99] text-left transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-neutral-700 flex flex-col justify-between h-56 relative overflow-hidden group cursor-pointer"
-            >
-              <div className="space-y-4">
-                <div className="w-10 h-10 rounded-lg bg-neutral-950 border border-neutral-850 flex items-center justify-center text-neutral-450 group-hover:text-white transition-colors duration-200">
-                  {type.icon}
-                </div>
-                <div className="space-y-1.5">
-                  <h3 className="text-sm font-bold text-white group-hover:text-indigo-400 transition-colors duration-200">
-                    {type.name}
-                  </h3>
-                  <p className="text-xs text-neutral-400 leading-relaxed">
-                    {type.description}
-                  </p>
-                </div>
+        {/* 2 Large Premium Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto w-full pt-4">
+          
+          {/* Practice Mode (MCQ) */}
+          <div 
+            onClick={() => navigate('/interview/practice')}
+            className="p-8 rounded-2xl border border-neutral-900 bg-[#09090b] hover:border-neutral-800 hover:bg-[#0c0c0f] active:scale-[0.99] transition-all duration-300 cursor-pointer flex flex-col justify-between h-[420px] group relative overflow-hidden shadow-2xl"
+          >
+            {/* Ambient Background Glow on hover */}
+            <div className="absolute -inset-px bg-gradient-to-br from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+            
+            <div className="space-y-6 relative z-10">
+              <div className="w-14 h-14 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:text-indigo-300 transition-colors duration-300">
+                <GraduationCap className="w-7 h-7" />
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-xl font-extrabold text-white group-hover:text-indigo-450 transition-colors duration-300">
+                  Practice Mode (MCQ)
+                </h3>
+                <p className="text-xs text-neutral-450 leading-relaxed font-medium">
+                  Practice interview questions in MCQ format with instant evaluation, explanations, analytics, and performance tracking. Perfect for strengthening concepts quickly before interviews.
+                </p>
               </div>
               
-              <div className="flex items-center gap-1 text-[10px] font-semibold text-neutral-500 group-hover:text-neutral-300 transition-colors duration-200">
+              {/* Features List */}
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 pt-2">
+                {['Multiple Choice Questions', 'Instant Scoring', 'Explanations', 'Accuracy Tracking', 'Performance Analytics'].map((feature, idx) => (
+                  <li key={idx} className="text-[10px] text-neutral-500 font-semibold flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="relative z-10 pt-4 flex items-center justify-between border-t border-neutral-900/50">
+              <button 
+                onClick={(e) => { e.stopPropagation(); navigate('/interview/practice'); }}
+                className="bg-neutral-900 border border-neutral-850 hover:bg-neutral-850 text-white font-bold py-2.5 px-5 rounded-lg text-xs transition-all duration-300 flex items-center gap-1.5 group-hover:border-indigo-500/30"
+              >
                 <span>Start Practice</span>
-                <ChevronRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          </div>
+
+          {/* Mock Interview (AI) */}
+          <div 
+            onClick={() => navigate('/interview/mock')}
+            className="p-8 rounded-2xl border border-neutral-900 bg-[#09090b] hover:border-neutral-800 hover:bg-[#0c0c0f] active:scale-[0.99] transition-all duration-300 cursor-pointer flex flex-col justify-between h-[420px] group relative overflow-hidden shadow-2xl"
+          >
+            {/* Ambient Background Glow on hover */}
+            <div className="absolute -inset-px bg-gradient-to-br from-emerald-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
+
+            <div className="space-y-6 relative z-10">
+              <div className="w-14 h-14 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:text-emerald-300 transition-colors duration-300">
+                <Mic className="w-6 h-6" />
               </div>
-            </button>
-          ))}
+              <div className="space-y-3">
+                <h3 className="text-xl font-extrabold text-white group-hover:text-emerald-450 transition-colors duration-300">
+                  Mock Interview (AI)
+                </h3>
+                <p className="text-xs text-neutral-450 leading-relaxed font-medium">
+                  Experience a realistic AI-powered interview with descriptive questions. Answer using voice or text and receive detailed AI feedback, communication analysis, and interview performance evaluation.
+                </p>
+              </div>
+
+              {/* Features List */}
+              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 pt-2">
+                {['AI Generated Questions', 'Voice & Text Responses', 'Real Interview Simulation', 'Personalized Feedback', 'AI Performance Analysis'].map((feature, idx) => (
+                  <li key={idx} className="text-[10px] text-neutral-500 font-semibold flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="relative z-10 pt-4 flex items-center justify-between border-t border-neutral-900/50">
+              <button 
+                onClick={(e) => { e.stopPropagation(); navigate('/interview/mock'); }}
+                className="bg-white hover:bg-neutral-100 text-black font-bold py-2.5 px-5 rounded-lg text-xs transition-all duration-300 flex items-center gap-1.5"
+              >
+                <span>Start Mock Interview</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+          </div>
+
         </div>
 
       </main>
@@ -251,4 +251,4 @@ const InterviewTypeSelectionPage = () => {
   );
 };
 
-export default InterviewTypeSelectionPage;
+export default InterviewModeSelectionPage;
