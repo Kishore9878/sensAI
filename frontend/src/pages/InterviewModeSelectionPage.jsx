@@ -8,10 +8,10 @@ import {
   User, 
   LogOut, 
   FileText,
-  HelpCircle,
   Mic,
   ArrowRight,
-  GraduationCap
+  GraduationCap,
+  Check
 } from 'lucide-react';
 import { ProfileModal } from '../components/ProfileModal';
 
@@ -28,10 +28,10 @@ const InterviewModeSelectionPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-foreground flex flex-col font-sans selection:bg-indigo-500/20 relative">
+    <div className="min-h-screen bg-black text-foreground flex flex-col font-sans selection:bg-blue-500/20 relative">
       
       {/* Grid Pattern Background Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#12121c_1px,transparent_1px),linear-gradient(to_bottom,#12121c_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none opacity-40"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#0d0d14_1px,transparent_1px),linear-gradient(to_bottom,#0d0d14_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none opacity-40"></div>
 
       {/* Top Header Navbar */}
       <header className="sticky top-0 z-50 w-full border-b border-neutral-800/80 bg-black/80 backdrop-blur">
@@ -57,7 +57,7 @@ const InterviewModeSelectionPage = () => {
                 onClick={() => setToolsDropdownOpen(!toolsDropdownOpen)}
                 className="bg-white hover:bg-neutral-100 text-black px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all duration-200"
               >
-                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                 <span>Growth Tools</span>
                 <ChevronDown className="w-3 h-3 text-neutral-500" />
               </button>
@@ -120,7 +120,7 @@ const InterviewModeSelectionPage = () => {
                     onClick={() => { setProfileDropdownOpen(false); setIsProfileOpen(true); }}
                     className="w-full text-left block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all flex items-center gap-2 cursor-pointer"
                   >
-                    <User className="w-3.5 h-3.5 animate-pulse text-indigo-400" />
+                    <User className="w-3.5 h-3.5 animate-pulse text-blue-400" />
                     Complete Profile
                   </button>
                   <button 
@@ -139,15 +139,15 @@ const InterviewModeSelectionPage = () => {
       </header>
 
       {/* Main Container */}
-      <main className="flex-1 container mx-auto px-6 py-12 relative z-10 flex flex-col justify-center max-w-7xl">
+      <main className="flex-1 container mx-auto px-6 py-16 relative z-10 flex flex-col justify-center max-w-7xl">
         
         {/* Header Title */}
-        <div className="text-center space-y-3 mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
-            Interview Prep Mode
+        <div className="text-center space-y-4 mb-16">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-none">
+            Select Prep Pathway
           </h1>
-          <p className="text-sm text-neutral-550 max-w-2xl mx-auto leading-relaxed">
-            Choose your preferred training ground. Build your fundamental knowledge with MCQ quizzes or experience a full-length, interactive AI mock interview.
+          <p className="text-xs text-neutral-500 max-w-xl mx-auto leading-relaxed">
+            Select your preferred training ground. Build core concepts with structured multiple choice questions, or step into a full-length, interactive AI oral interview simulation.
           </p>
         </div>
 
@@ -157,39 +157,39 @@ const InterviewModeSelectionPage = () => {
           {/* Practice Mode (MCQ) */}
           <div 
             onClick={() => navigate('/interview/practice')}
-            className="p-8 rounded-2xl border border-neutral-900 bg-[#09090b] hover:border-neutral-800 hover:bg-[#0c0c0f] active:scale-[0.99] transition-all duration-300 cursor-pointer flex flex-col justify-between h-[420px] group relative overflow-hidden shadow-2xl"
+            className="p-8 rounded-xl border border-neutral-900 bg-[#09090b] hover:border-neutral-800 transition-all duration-200 cursor-pointer flex flex-col justify-between h-[420px] group relative overflow-hidden"
           >
-            {/* Ambient Background Glow on hover */}
-            <div className="absolute -inset-px bg-gradient-to-br from-indigo-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-            
             <div className="space-y-6 relative z-10">
-              <div className="w-14 h-14 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:text-indigo-300 transition-colors duration-300">
-                <GraduationCap className="w-7 h-7" />
+              <div className="flex justify-between items-center">
+                <div className="w-12 h-12 rounded-lg bg-neutral-950 border border-neutral-850 flex items-center justify-center text-neutral-400 group-hover:text-blue-500 transition-colors duration-200">
+                  <GraduationCap className="w-6 h-6" />
+                </div>
               </div>
-              <div className="space-y-3">
-                <h3 className="text-xl font-extrabold text-white group-hover:text-indigo-450 transition-colors duration-300">
+              
+              <div className="space-y-2">
+                <h3 className="text-xl font-extrabold text-white group-hover:text-blue-500 transition-colors duration-200">
                   Practice Mode (MCQ)
                 </h3>
-                <p className="text-xs text-neutral-450 leading-relaxed font-medium">
+                <p className="text-xs text-neutral-450 leading-relaxed font-normal">
                   Practice interview questions in MCQ format with instant evaluation, explanations, analytics, and performance tracking. Perfect for strengthening concepts quickly before interviews.
                 </p>
               </div>
               
               {/* Features List */}
-              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 pt-2">
-                {['Multiple Choice Questions', 'Instant Scoring', 'Explanations', 'Accuracy Tracking', 'Performance Analytics'].map((feature, idx) => (
-                  <li key={idx} className="text-[10px] text-neutral-500 font-semibold flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+              <ul className="space-y-2.5 pt-2">
+                {['Multiple Choice Questions', 'Instant Scoring & Explanations', 'Accuracy & Performance Analytics'].map((feature, idx) => (
+                  <li key={idx} className="text-xs text-neutral-400 font-medium flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-blue-500 shrink-0" />
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="relative z-10 pt-4 flex items-center justify-between border-t border-neutral-900/50">
+            <div className="relative z-10 pt-4 flex items-center border-t border-neutral-900">
               <button 
                 onClick={(e) => { e.stopPropagation(); navigate('/interview/practice'); }}
-                className="bg-neutral-900 border border-neutral-850 hover:bg-neutral-850 text-white font-bold py-2.5 px-5 rounded-lg text-xs transition-all duration-300 flex items-center gap-1.5 group-hover:border-indigo-500/30"
+                className="w-full bg-neutral-900 hover:bg-neutral-850 text-white border border-neutral-800 font-bold py-3 px-5 rounded-lg text-xs transition-all duration-200 flex items-center justify-center gap-1.5"
               >
                 <span>Start Practice</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
@@ -200,39 +200,39 @@ const InterviewModeSelectionPage = () => {
           {/* Mock Interview (AI) */}
           <div 
             onClick={() => navigate('/interview/mock')}
-            className="p-8 rounded-2xl border border-neutral-900 bg-[#09090b] hover:border-neutral-800 hover:bg-[#0c0c0f] active:scale-[0.99] transition-all duration-300 cursor-pointer flex flex-col justify-between h-[420px] group relative overflow-hidden shadow-2xl"
+            className="p-8 rounded-xl border border-neutral-900 bg-[#09090b] hover:border-neutral-800 transition-all duration-200 cursor-pointer flex flex-col justify-between h-[420px] group relative overflow-hidden"
           >
-            {/* Ambient Background Glow on hover */}
-            <div className="absolute -inset-px bg-gradient-to-br from-emerald-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl"></div>
-
             <div className="space-y-6 relative z-10">
-              <div className="w-14 h-14 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:text-emerald-300 transition-colors duration-300">
-                <Mic className="w-6 h-6" />
+              <div className="flex justify-between items-center">
+                <div className="w-12 h-12 rounded-lg bg-neutral-950 border border-neutral-850 flex items-center justify-center text-neutral-400 group-hover:text-blue-500 transition-colors duration-200">
+                  <Mic className="w-5 h-5" />
+                </div>
               </div>
-              <div className="space-y-3">
-                <h3 className="text-xl font-extrabold text-white group-hover:text-emerald-450 transition-colors duration-300">
+
+              <div className="space-y-2">
+                <h3 className="text-xl font-extrabold text-white group-hover:text-blue-500 transition-colors duration-200">
                   Mock Interview (AI)
                 </h3>
-                <p className="text-xs text-neutral-450 leading-relaxed font-medium">
+                <p className="text-xs text-neutral-450 leading-relaxed font-normal">
                   Experience a realistic AI-powered interview with descriptive questions. Answer using voice or text and receive detailed AI feedback, communication analysis, and interview performance evaluation.
                 </p>
               </div>
 
               {/* Features List */}
-              <ul className="grid grid-cols-2 gap-x-4 gap-y-2 pt-2">
-                {['AI Generated Questions', 'Voice & Text Responses', 'Real Interview Simulation', 'Personalized Feedback', 'AI Performance Analysis'].map((feature, idx) => (
-                  <li key={idx} className="text-[10px] text-neutral-500 font-semibold flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <ul className="space-y-2.5 pt-2">
+                {['AI Generated Questions', 'Voice & Text Responses', 'Real Interview Simulation & Feedback'].map((feature, idx) => (
+                  <li key={idx} className="text-xs text-neutral-400 font-medium flex items-center gap-2">
+                    <Check className="w-3.5 h-3.5 text-blue-500 shrink-0" />
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="relative z-10 pt-4 flex items-center justify-between border-t border-neutral-900/50">
+            <div className="relative z-10 pt-4 flex items-center border-t border-neutral-900">
               <button 
                 onClick={(e) => { e.stopPropagation(); navigate('/interview/mock'); }}
-                className="bg-white hover:bg-neutral-100 text-black font-bold py-2.5 px-5 rounded-lg text-xs transition-all duration-300 flex items-center gap-1.5"
+                className="w-full bg-white hover:bg-neutral-100 text-black font-extrabold py-3 px-5 rounded-lg text-xs transition-all duration-200 flex items-center justify-center gap-1.5"
               >
                 <span>Start Mock Interview</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />

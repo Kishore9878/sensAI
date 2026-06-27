@@ -45,45 +45,45 @@ const InterviewTypeSelectionPage = () => {
       id: 'technical',
       name: 'Technical Interview',
       description: 'Evaluate technical concepts, system architecture, programming paradigms, and debugging capabilities tailored directly to your target role and key skills.',
-      icon: <Code className="w-5 h-5 text-indigo-400 group-hover:text-indigo-300 transition-colors" />
+      icon: <Code className="w-5 h-5" />
     },
     {
       id: 'behavioral',
       name: 'Behavioral Interview',
       description: 'Practice scenarios testing leadership, teamwork, ownership, communication, and conflict resolution using professional STAR-style interview questions.',
-      icon: <MessageSquare className="w-5 h-5 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
+      icon: <MessageSquare className="w-5 h-5" />
     },
     {
       id: 'system_design',
       name: 'System Design Interview',
       description: 'Assess your design capability for scalable distributed systems, databases, caching layers, load balancing, performance optimization, and security concerns.',
-      icon: <Layers className="w-5 h-5 text-amber-400 group-hover:text-amber-300 transition-colors" />
+      icon: <Layers className="w-5 h-5" />
     },
     {
       id: 'hr',
       name: 'HR Interview',
       description: 'Prepare for HR assessments evaluating organizational fit, communication styles, situational integrity, values alignment, and career motivations.',
-      icon: <User className="w-5 h-5 text-pink-400 group-hover:text-pink-300 transition-colors" />
+      icon: <User className="w-5 h-5" />
     },
     {
       id: 'resume',
       name: 'Resume-Based Interview',
       description: 'Engage in an interview customized entirely to your uploaded resume, detailing your specific projects, technologies used, experiences, and achievements.',
-      icon: <FileText className="w-5 h-5 text-sky-400 group-hover:text-sky-300 transition-colors" />
+      icon: <FileText className="w-5 h-5" />
     },
     {
       id: 'core_subjects',
       name: 'Core Subjects Interview',
       description: 'Test your fundamental knowledge of computer science core subjects: Object Oriented Programming, DBMS, Operating Systems, and Computer Networks.',
-      icon: <GraduationCap className="w-5 h-5 text-purple-400 group-hover:text-purple-300 transition-colors" />
+      icon: <GraduationCap className="w-5 h-5" />
     }
   ];
 
   return (
-    <div className="min-h-screen bg-black text-foreground flex flex-col font-sans selection:bg-indigo-500/20">
+    <div className="min-h-screen bg-black text-foreground flex flex-col font-sans selection:bg-blue-500/20 relative">
       
       {/* Grid Pattern Background Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#12121c_1px,transparent_1px),linear-gradient(to_bottom,#12121c_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none opacity-40"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#0d0d14_1px,transparent_1px),linear-gradient(to_bottom,#0d0d14_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none opacity-40"></div>
 
       {/* Top Header Navbar */}
       <header className="sticky top-0 z-50 w-full border-b border-neutral-800/80 bg-black/80 backdrop-blur">
@@ -109,7 +109,7 @@ const InterviewTypeSelectionPage = () => {
                 onClick={() => setToolsDropdownOpen(!toolsDropdownOpen)}
                 className="bg-white hover:bg-neutral-100 text-black px-3.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all duration-200"
               >
-                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                 <span>Growth Tools</span>
                 <ChevronDown className="w-3 h-3 text-neutral-500" />
               </button>
@@ -165,14 +165,14 @@ const InterviewTypeSelectionPage = () => {
                   {user && (
                     <div className="px-4 py-2 border-b border-neutral-900">
                       <p className="text-xs font-bold text-white truncate">{user.name}</p>
-                      <p className="text-[10px] text-neutral-500 truncate">{user.email}</p>
+                      <p className="text-[10px] text-neutral-550 truncate">{user.email}</p>
                     </div>
                   )}
                   <button 
                     onClick={() => { setProfileDropdownOpen(false); setIsProfileOpen(true); }}
                     className="w-full text-left block px-4 py-2 text-xs text-neutral-300 hover:bg-neutral-900 hover:text-white transition-all flex items-center gap-2 cursor-pointer"
                   >
-                    <User className="w-3.5 h-3.5 animate-pulse text-indigo-400" />
+                    <User className="w-3.5 h-3.5 animate-pulse text-blue-400" />
                     Complete Profile
                   </button>
                   <button 
@@ -191,7 +191,7 @@ const InterviewTypeSelectionPage = () => {
       </header>
 
       {/* Main Container */}
-      <main className="flex-1 container mx-auto px-6 py-10 relative z-10 space-y-6 max-w-5xl">
+      <main className="flex-1 container mx-auto px-6 py-10 relative z-10 space-y-6">
         
         {/* Back Link */}
         <div>
@@ -205,30 +205,30 @@ const InterviewTypeSelectionPage = () => {
         </div>
 
         {/* Header Title */}
-        <div className="space-y-1">
-          <h1 className="text-4xl font-extrabold text-white tracking-tight">Select Interview Type</h1>
-          <p className="text-xs text-neutral-500 max-w-2xl">
+        <div className="space-y-1.5">
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">Select Practice Category</h1>
+          <p className="text-xs text-neutral-500 max-w-2xl leading-relaxed">
             Choose the specific interview assessment style you want to practice. The AI interviewer will generate questions and feedback matching your selection.
           </p>
         </div>
 
-        {/* 4 Cards Grid */}
+        {/* 6 Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
           {interviewTypes.map((type) => (
             <button
               key={type.id}
               onClick={() => handleSelect(type.id)}
-              className="p-6 rounded-xl border border-neutral-900 bg-[#09090b] hover:border-neutral-800 hover:bg-[#0c0c0f] active:scale-[0.99] text-left transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-neutral-700 flex flex-col justify-between h-56 relative overflow-hidden group cursor-pointer"
+              className="p-6 rounded-xl border border-neutral-900 bg-[#09090b] hover:border-neutral-800 active:scale-[0.99] text-left transition-all duration-200 focus:outline-none flex flex-col justify-between h-56 relative overflow-hidden group cursor-pointer"
             >
               <div className="space-y-4">
-                <div className="w-10 h-10 rounded-lg bg-neutral-950 border border-neutral-850 flex items-center justify-center text-neutral-450 group-hover:text-white transition-colors duration-200">
+                <div className="w-10 h-10 rounded-lg bg-neutral-950 border border-neutral-850 flex items-center justify-center text-neutral-450 group-hover:text-blue-500 transition-colors duration-200">
                   {type.icon}
                 </div>
                 <div className="space-y-1.5">
-                  <h3 className="text-sm font-bold text-white group-hover:text-indigo-400 transition-colors duration-200">
+                  <h3 className="text-sm font-bold text-white group-hover:text-blue-500 transition-colors duration-200">
                     {type.name}
                   </h3>
-                  <p className="text-xs text-neutral-400 leading-relaxed">
+                  <p className="text-xs text-neutral-400 leading-relaxed font-normal">
                     {type.description}
                   </p>
                 </div>
@@ -236,7 +236,7 @@ const InterviewTypeSelectionPage = () => {
               
               <div className="flex items-center gap-1 text-[10px] font-semibold text-neutral-500 group-hover:text-neutral-300 transition-colors duration-200">
                 <span>Start Practice</span>
-                <ChevronRight className="w-3.5 h-3.5" />
+                <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
             </button>
           ))}
