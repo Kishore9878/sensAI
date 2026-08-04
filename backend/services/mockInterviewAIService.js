@@ -204,19 +204,48 @@ export const generateMockInterviewQuestion = async (profile, category, previousQ
  */
 export const gradeMockInterviewAnswer = async (question, userAnswer) => {
   const getMock = () => {
-    // Generate a default mock score
-    const scores = {
-      technicalAccuracy: 8,
-      communication: 7,
-      problemSolving: 8,
-      confidence: 8,
-      completeness: 7,
-      clarity: 8,
-      overallQuality: 8
-    };
+    const trimmed = (userAnswer || '').trim();
+    if (!trimmed) {
+      return {
+        feedback: "No answer was provided for this question.",
+        scores: {
+          technicalAccuracy: 1,
+          communication: 1,
+          problemSolving: 1,
+          confidence: 1,
+          completeness: 1,
+          clarity: 1,
+          overallQuality: 1
+        }
+      };
+    }
+    const words = trimmed.split(/\s+/).length;
+    if (words < 10) {
+      return {
+        feedback: "Your response is extremely brief. Please provide a more detailed explanation of the concept or project implementation to demonstrate your understanding.",
+        scores: {
+          technicalAccuracy: 3,
+          communication: 3,
+          problemSolving: 3,
+          confidence: 4,
+          completeness: 3,
+          clarity: 4,
+          overallQuality: 3
+        }
+      };
+    }
+    // Default reasonable mock for longer answers
     return {
-      feedback: "Your response is clear and directly addresses the core question. To improve, try structure your answer using specific metrics or examples.",
-      scores
+      feedback: "Your response is clear and covers the topic. To improve, try structuring your answer with more specific examples or quantitative metrics.",
+      scores: {
+        technicalAccuracy: 7,
+        communication: 7,
+        problemSolving: 7,
+        confidence: 7,
+        completeness: 7,
+        clarity: 7,
+        overallQuality: 7
+      }
     };
   };
 
@@ -289,27 +318,77 @@ export const gradeMockInterviewAnswer = async (question, userAnswer) => {
  */
 export const generateMockInterviewFinalFeedback = async (category, questionsAndAnswers) => {
   const getMock = () => {
+    // Calculate average overall quality score from questionsAndAnswers if available
+    let avgScore = 8.2; // default fallback if no questions
+    if (Array.isArray(questionsAndAnswers) && questionsAndAnswers.length > 0) {
+      let totalQuality = 0;
+      let count = 0;
+      questionsAndAnswers.forEach(q => {
+        if (q.scores && typeof q.scores.overallQuality === 'number') {
+          totalQuality += q.scores.overallQuality;
+          count++;
+        }
+      });
+      if (count > 0) {
+        // overallQuality is out of 10, overallScore is out of 100
+        avgScore = (totalQuality / count) * 10;
+      }
+    }
+
+    let performanceSummary = "Overall, you performed well in this mock interview. Your technical awareness is solid, and you explained concepts clearly. Focus on structure and including quantitative metrics to make your answers stand out.";
+    let readiness = "Ready";
+    let strengths = [
+      "Strong understanding of core engineering and architectural concepts.",
+      "Effective explanation of concepts with a clear and structured delivery.",
+      "Good problem-solving methodology when breaking down high-traffic systems."
+    ];
+    let improvements = [
+      "Include more concrete examples and quantitative metrics from past projects.",
+      "Structure behavioral answers strictly using the STAR format (Situation, Task, Action, Result).",
+      "Elaborate more on caching and edge-case scenarios when describing scaling methods."
+    ];
+
+    if (avgScore < 40) {
+      performanceSummary = "Based on the mock interview, there are significant areas that need improvement. Several questions were either left unanswered or lacked the necessary depth. We recommend reviewing core concepts and practicing structured responses before your next interview.";
+      readiness = "Not Ready";
+      strengths = [
+        "Willingness to take the mock interview and identify current knowledge gaps.",
+        "Attempting to go through all questions in the session.",
+        "Initial familiarity with some terms related to the interview category."
+      ];
+      improvements = [
+        "Ensure all questions are answered, avoiding empty responses.",
+        "Review and study core fundamentals related to the interview category.",
+        "Practice explaining project architectures and technical choices clearly."
+      ];
+    } else if (avgScore < 70) {
+      performanceSummary = "You demonstrated a foundational understanding, but there is room for improvement in depth and articulation. Focus on elaborating more on your technical decisions and providing specific examples.";
+      readiness = "Needs Improvement";
+      strengths = [
+        "Good understanding of fundamental concepts.",
+        "Clear communication on standard questions.",
+        "Structured delivery of responses."
+      ];
+      improvements = [
+        "Provide deeper technical analysis in your answers.",
+        "Elaborate on trade-offs and edge cases for design decisions.",
+        "Incorporate specific metrics and outcomes of your work."
+      ];
+    }
+
     return {
-      performanceSummary: "Overall, you performed well in this mock interview. Your technical awareness is solid, and you explained asynchronous paradigms clearly. Focus a bit more on structure and including quantitative metrics to make your answers stand out.",
-      strengths: [
-        "Strong understanding of core engineering and architectural concepts.",
-        "Effective explanation of concepts with a clear and structured delivery.",
-        "Good problem-solving methodology when breaking down high-traffic systems."
-      ],
-      improvements: [
-        "Include more concrete examples and quantitative metrics from past projects.",
-        "Structure behavioral answers strictly using the STAR format (Situation, Task, Action, Result).",
-        "Elaborate more on caching and edge-case scenarios when describing scaling methods."
-      ],
+      performanceSummary,
+      strengths,
+      improvements,
       learningResources: [
         "System Design Primer by Donne Martin (GitHub repository)",
         "Designing Data-Intensive Applications by Martin Kleppmann",
         "The STAR Method Handbook for Behavioral Interviews"
       ],
-      recommendedNext: "Mock Interview (AI) - System Design Interview",
-      difficultyLevel: "Intermediate",
-      readiness: "Ready",
-      overallScore: 82
+      recommendedNext: avgScore < 40 ? "Foundational Topic Review & Practice" : "Mock Interview (AI) - System Design Interview",
+      difficultyLevel: avgScore < 40 ? "Beginner" : (avgScore < 70 ? "Intermediate" : "Advanced"),
+      readiness,
+      overallScore: Math.round(avgScore)
     };
   };
 
